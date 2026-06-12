@@ -55,13 +55,6 @@ export default function JobCard({ job, onClick, isProduction }) {
             }}></span>
             {s?.label}
           </span>
-          {isWaiting && (
-            <div className="badge-waiting" style={{
-              background: '#ef4444', color: '#fff', border: '1px solid #dc2626',
-              fontSize: 12, fontWeight: 700, padding: '4px 12px', borderRadius: 'var(--radius-pill)',
-              display: 'flex', alignItems: 'center', gap: 6, boxShadow: '0 4px 12px rgba(239,68,68,0.3)'
-            }}>⏳ รอคอนเฟิร์ม !</div>
-          )}
         </div>
       </div>
 
@@ -71,28 +64,31 @@ export default function JobCard({ job, onClick, isProduction }) {
       </div>
 
       {/* Bottom Section: Tags */}
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', alignItems: 'center' }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', alignItems: 'center' }}>
         {job.print_system && (
-          <span className="tag" style={{ background: '#f8fafc', color: '#4338ca', fontWeight: 700, padding: '6px 14px', borderRadius: '20px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>🖨️ {job.print_system}</span>
+          <span className="tag" style={{ background: '#f8fafc', color: '#4338ca', fontWeight: 600, padding: '3px 8px', borderRadius: '12px', boxShadow: '0 1px 2px rgba(0,0,0,0.05)', fontSize: '11px' }}>🖨️ {job.print_system}</span>
         )}
         {job.print_color && (
-          <span className="tag" style={{ background: '#f8fafc', color: '#be185d', fontWeight: 700, padding: '6px 14px', borderRadius: '20px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>🎨 {job.print_color}</span>
+          <span className="tag" style={{ background: '#f8fafc', color: '#be185d', fontWeight: 600, padding: '3px 8px', borderRadius: '12px', boxShadow: '0 1px 2px rgba(0,0,0,0.05)', fontSize: '11px' }}>🎨 {job.print_color}</span>
         )}
         {job.paper && (
-          <span className="tag" style={{ background: '#f8fafc', color: '#475569', fontWeight: 700, padding: '6px 14px', borderRadius: '20px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>📄 {job.paper}</span>
+          <span className="tag" style={{ background: '#f8fafc', color: '#475569', fontWeight: 600, padding: '3px 8px', borderRadius: '12px', boxShadow: '0 1px 2px rgba(0,0,0,0.05)', fontSize: '11px' }}>📄 {job.paper}</span>
+        )}
+        {job.colors && (
+          <span className="tag" style={{ background: '#fffbeb', color: '#b45309', fontWeight: 600, padding: '3px 8px', borderRadius: '12px', boxShadow: '0 1px 2px rgba(0,0,0,0.05)', fontSize: '11px' }}>{job.colors}</span>
         )}
         {job.coating && job.coating !== 'ไม่เคลือบ' && (
-          <span className="tag" style={{ background: '#f8fafc', color: '#2563eb', fontWeight: 700, padding: '6px 14px', borderRadius: '20px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>✨ {job.coating}</span>
+          <span className="tag" style={{ background: '#f8fafc', color: '#2563eb', fontWeight: 600, padding: '3px 8px', borderRadius: '12px', boxShadow: '0 1px 2px rgba(0,0,0,0.05)', fontSize: '11px' }}>✨ {job.coating}</span>
         )}
         {st.map(tech => (
-          <span key={tech} className="tag" style={{ background: '#f8fafc', color: '#7c3aed', fontWeight: 700, padding: '6px 14px', borderRadius: '20px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
+          <span key={tech} className="tag" style={{ background: '#f8fafc', color: '#7c3aed', fontWeight: 600, padding: '3px 8px', borderRadius: '12px', boxShadow: '0 1px 2px rgba(0,0,0,0.05)', fontSize: '11px' }}>
             ⭐ {tech}
             {tech === 'ปั๊มเคทอง' && job.foil_color ? ` (${job.foil_color})` : ''}
             {tech === 'พับ' && job.fold_type ? ` (${job.fold_type})` : ''}
           </span>
         ))}
         {due && (
-          <span className={`tag ${due.cls}`} style={{ background: '#f8fafc', fontWeight: 700, padding: '6px 14px', borderRadius: '20px', boxShadow: '0 2px 4px rgba(0,0,0,0.05)', fontSize: 13 }}>📅 {due.label}</span>
+          <span className={`tag ${due.cls}`} style={{ background: '#f8fafc', fontWeight: 600, padding: '3px 8px', borderRadius: '12px', boxShadow: '0 1px 2px rgba(0,0,0,0.05)', fontSize: '11px' }}>📅 {due.label}</span>
         )}
       </div>
     </div>
