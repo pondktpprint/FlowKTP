@@ -1,0 +1,25 @@
+version: '3.9'
+
+services:
+  api:
+    build: ./backend
+    restart: unless-stopped
+    environment:
+      DB_HOST: ${DB_HOST:-localhost}
+      DB_PORT: ${DB_PORT:-3306}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME:-printflow}
+      JWT_SECRET: ${JWT_SECRET}
+      PORT: 4000
+    network_mode: host   # ใช้ MariaDB ที่รันบน host ได้เลย
+    ports:
+      - "4000:4000"
+
+  frontend:
+    build: ./frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - api
