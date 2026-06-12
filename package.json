@@ -1,0 +1,11 @@
+{
+  "name": "printflow",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "deploy": "git pull && npm install && npm run build --workspace=frontend && pm2 restart printflow-api"
+  }
+}
