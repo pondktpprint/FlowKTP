@@ -118,13 +118,6 @@ export default function JobModal({ job, sales, isProduction, onClose, onSaved, o
               <label>ประเภทกระดาษ</label>
               <input className="input" value={form.paper} onChange={e => set('paper', e.target.value)} disabled={readOnly} placeholder="เช่น อาร์ตมัน 150g"/>
             </div>
-            <div className="field">
-              <label>จำนวนสี</label>
-              <select className="input" value={form.colors} onChange={e => set('colors', e.target.value)} disabled={readOnly}>
-                <option value="">— เลือก —</option>
-                {COLORS_OPTIONS.map(c => <option key={c}>{c}</option>)}
-              </select>
-            </div>
 
             <div className="field">
               <label>การเคลือบ</label>
