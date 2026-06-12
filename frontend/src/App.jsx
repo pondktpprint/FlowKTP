@@ -17,6 +17,12 @@ export default function App() {
   const [loginErr, setLoginErr]   = useState('');
   const [toast, setToast]         = useState('');
   const [loading, setLoading]     = useState(true);
+  const [showSplash, setShowSplash] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setShowSplash(false), 2500);
+    return () => clearTimeout(timer);
+  }, []);
 
   const showToast = msg => { setToast(msg); setTimeout(() => setToast(''), 2500); };
 
@@ -92,8 +98,20 @@ export default function App() {
   const waitCount = jobs.filter(j => j.status === 'wait_confirm').length;
 
   return (
-    <div style={{ display: 'flex', height: '100vh', background: 'var(--surface)', overflow: 'hidden' }}>
-      {/* Sidebar */}
+    <>
+      {/* Splash Screen */}
+      {showSplash && (
+        <div className="splash-screen">
+          <img src="/splash.png" alt="Splash Screen" className="splash-img" onError={(e) => e.target.style.display = 'none'} />
+          <div className="splash-text">
+            <h1>Kittiporn Printing</h1>
+            <p>Production on Demand</p>
+          </div>
+        </div>
+      )}
+
+      <div style={{ display: 'flex', height: '100vh', background: 'var(--surface)', overflow: 'hidden' }}>
+        {/* Sidebar */}
       <aside style={{ width: 260, background: 'var(--surface-card)', borderRight: '1px solid var(--rule)', display: 'flex', flexDirection: 'column', flexShrink: 0 }}>
         <div style={{ padding: '24px 28px', borderBottom: '1px solid var(--rule)' }}>
           <span style={{ fontFamily: 'var(--font)', fontWeight: 800, fontSize: 16, letterSpacing: '.02em', color: 'var(--accent)' }}>Kittiporn Printing Co.,Ltd</span>
@@ -292,7 +310,8 @@ export default function App() {
       )}
 
       {toast && <div className="toast show">{toast}</div>}
-    </div>
+      </div>
+    </>
   );
 }
 
