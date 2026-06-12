@@ -87,121 +87,142 @@ export default function App() {
   const waitCount = jobs.filter(j => j.status === 'wait_confirm').length;
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--surface)' }}>
-      {/* Header */}
-      <header className="glass-header" style={{
-        color: '#fff', height: 60,
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '0 24px', position: 'sticky', top: 0, zIndex: 100,
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ fontFamily: 'var(--mono)', fontWeight: 600, fontSize: 15, letterSpacing: '.05em' }}>PRINTFLOW</span>
-          {waitCount > 0 && (
-            <span style={{ 
-              background: 'rgba(239, 68, 68, 0.2)', color: '#fca5a5', 
-              fontSize: 12, fontWeight: 700, padding: '4px 10px', 
-              borderRadius: 'var(--radius-pill)', border: '1px solid rgba(239, 68, 68, 0.3)' 
-            }}>
-              ⏳ {waitCount} รอคอนเฟิร์ม
-            </span>
-          )}
+    <div style={{ display: 'flex', height: '100vh', background: 'var(--surface)', overflow: 'hidden' }}>
+      {/* Sidebar */}
+      <aside style={{ width: 260, background: 'var(--surface-card)', borderRight: '1px solid var(--rule)', display: 'flex', flexDirection: 'column', flexShrink: 0 }}>
+        <div style={{ padding: '24px 28px', borderBottom: '1px solid var(--rule)' }}>
+          <span style={{ fontFamily: 'var(--mono)', fontWeight: 800, fontSize: 18, letterSpacing: '.05em', color: 'var(--accent)' }}>PRINTFLOW</span>
         </div>
-        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-          <span style={{ fontSize: 12, color: '#9ca3af' }}>{jobs.length} งาน</span>
+        
+        <nav style={{ flex: 1, padding: '28px 20px', display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--ink-faint)', textTransform: 'uppercase', marginBottom: 8, paddingLeft: 8 }}>MENU</div>
+          <button className="btn btn-ghost" style={{ justifyContent: 'flex-start', background: 'rgba(255,255,255,0.05)', color: 'var(--ink)', border: 'none' }}>🖨️ แดชบอร์ดงานพิมพ์</button>
+          <button className="btn btn-ghost" style={{ justifyContent: 'flex-start', border: 'none', opacity: 0.5 }} disabled>📊 สถิติรายเดือน (เร็วๆนี้)</button>
+          <button className="btn btn-ghost" style={{ justifyContent: 'flex-start', border: 'none', opacity: 0.5 }} disabled>👥 จัดการเซลล์ (เร็วๆนี้)</button>
+        </nav>
+
+        <div style={{ padding: 24, borderTop: '1px solid var(--rule)' }}>
           {isProduction ? (
-            <>
-              <button className="btn btn-ghost btn-sm" style={{ background: 'rgba(255,255,255,0.05)', color: '#e5e7eb', borderColor: 'rgba(255,255,255,0.1)' }} onClick={() => { setSelected('new'); }}>+ เพิ่มงาน</button>
-              <button className="btn btn-ghost btn-sm" style={{ background: 'rgba(255,255,255,0.05)', color: '#e5e7eb', borderColor: 'rgba(255,255,255,0.1)' }} onClick={handleLogout}>ออกจากระบบ</button>
-            </>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'var(--accent)', color: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: 16 }}>P</div>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <span style={{ fontSize: 14, fontWeight: 600 }}>Pond</span>
+                  <span style={{ fontSize: 12, color: 'var(--ink-soft)' }}>Production</span>
+                </div>
+              </div>
+              <button className="btn btn-ghost btn-sm" onClick={handleLogout} style={{ width: '100%', borderColor: 'rgba(255,255,255,0.1)' }}>ออกจากระบบ</button>
+            </div>
           ) : (
-            <button className="btn btn-ghost btn-sm" style={{ background: 'rgba(255,255,255,0.05)', color: '#e5e7eb', borderColor: 'rgba(255,255,255,0.1)' }} onClick={() => setLoginOpen(true)}>🔐 Production</button>
+            <button className="btn btn-dark" style={{ width: '100%' }} onClick={() => setLoginOpen(true)}>🔐 ฝ่ายผลิตล็อคอิน</button>
           )}
         </div>
-      </header>
+      </aside>
 
-      <div style={{ maxWidth: 960, margin: '0 auto', padding: '20px 16px' }}>
+      {/* Main Content */}
+      <main style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, overflowY: 'auto' }}>
+        <div style={{ padding: '40px 48px', maxWidth: 1200, margin: '0 auto', width: '100%' }}>
+          
+          {/* Greeting Banner */}
+          <div style={{
+            background: 'linear-gradient(135deg, #f59e0b 0%, #10b981 100%)',
+            borderRadius: 'var(--radius-lg)',
+            padding: '32px 40px',
+            color: '#fff',
+            marginBottom: 32,
+            boxShadow: 'var(--shadow-md)',
+            position: 'relative', overflow: 'hidden'
+          }}>
+            <h1 style={{ fontSize: 28, fontWeight: 700, marginBottom: 8, color: '#fff' }}>👋 สวัสดี {isProduction ? 'Pond' : 'ทีมเซลล์'},</h1>
+            <p style={{ opacity: 0.9, maxWidth: 500, lineHeight: 1.6, marginBottom: 24 }}>ติดตามสถานะงานพิมพ์และจัดการคิวงานทั้งหมดของคุณได้ที่นี่</p>
+            {isProduction && <button className="btn" style={{ background: '#fff', color: '#000', fontWeight: 600, border: 'none' }} onClick={() => setSelected('new')}>+ เพิ่มงานใหม่</button>}
+          </div>
 
-        {/* Sales filter tabs */}
-        <div style={{ display: 'flex', gap: 10, marginBottom: 20, flexWrap: 'wrap', alignItems: 'center' }}>
-          <button
-            onClick={() => setFilter('all')}
-            style={{
-              padding: '8px 16px', borderRadius: 'var(--radius-pill)', border: '1px solid',
-              fontFamily: 'var(--font)', fontSize: 14, fontWeight: 600, cursor: 'pointer',
-              transition: 'all 0.2s',
-              background: filterSales === 'all' ? 'var(--ink)' : 'var(--white)',
-              color:      filterSales === 'all' ? '#fff' : 'var(--ink-soft)',
-              borderColor: filterSales === 'all' ? 'var(--ink)' : 'var(--rule)',
-              boxShadow: filterSales === 'all' ? 'var(--shadow-md)' : 'var(--shadow-sm)',
-            }}
-          >ทั้งหมด</button>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
+            <h2 style={{ fontSize: 20, fontWeight: 600 }}>คิวงานทั้งหมด ({jobs.length})</h2>
+            {waitCount > 0 && (
+              <span style={{ 
+                background: 'rgba(239, 68, 68, 0.15)', color: '#fca5a5', 
+                fontSize: 13, fontWeight: 700, padding: '6px 14px', 
+                borderRadius: 'var(--radius-pill)', border: '1px solid rgba(239, 68, 68, 0.3)' 
+              }}>
+                ⏳ มี {waitCount} งานที่รอคอนเฟิร์ม!
+              </span>
+            )}
+          </div>
 
-          {sales.map(s => (
+          {/* Sales filter tabs */}
+          <div style={{ display: 'flex', gap: 10, marginBottom: 20, flexWrap: 'wrap', alignItems: 'center' }}>
             <button
-              key={s.id}
-              onClick={() => setFilter(String(s.id))}
+              onClick={() => setFilter('all')}
               style={{
                 padding: '8px 16px', borderRadius: 'var(--radius-pill)', border: '1px solid',
                 fontFamily: 'var(--font)', fontSize: 14, fontWeight: 600, cursor: 'pointer',
                 transition: 'all 0.2s',
-                background:  String(s.id) === filterSales ? s.color : 'var(--white)',
-                color:       String(s.id) === filterSales ? '#fff' : s.color,
-                borderColor: String(s.id) === filterSales ? s.color : s.color + '40',
-                boxShadow: String(s.id) === filterSales ? 'var(--shadow-md)' : 'var(--shadow-sm)',
+                background: filterSales === 'all' ? 'var(--ink)' : 'var(--surface-card)',
+                color:      filterSales === 'all' ? 'var(--surface)' : 'var(--ink-soft)',
+                borderColor: filterSales === 'all' ? 'var(--ink)' : 'var(--rule)',
+                boxShadow: filterSales === 'all' ? 'var(--shadow-md)' : 'var(--shadow-sm)',
               }}
-            >
-              {s.name}
-              <span style={{
-                marginLeft: 8, fontSize: 12, fontWeight: 700,
-                background: String(s.id) === filterSales ? 'rgba(255,255,255,.25)' : s.color + '15',
-                color: String(s.id) === filterSales ? '#fff' : s.color,
-                padding: '2px 8px', borderRadius: 'var(--radius-pill)',
-              }}>
-                {jobs.filter(j => j.sales_id === s.id).length}
-              </span>
-            </button>
-          ))}
-        </div>
+            >ทั้งหมด</button>
 
-        {/* Search + status filter */}
-        <div style={{ display: 'flex', gap: 12, marginBottom: 24, flexWrap: 'wrap' }}>
-          <div style={{ flex: 1, minWidth: 220, position: 'relative' }}>
-            <span style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: 'var(--ink-faint)', pointerEvents: 'none' }}>🔍</span>
-            <input className="input" style={{ paddingLeft: 38, height: '100%' }} placeholder="ค้นหา Job, ชื่องาน..." value={search} onChange={e => setSearch(e.target.value)}/>
-          </div>
-          <select className="input" style={{ width: 180 }} value={filterStatus} onChange={e => setFStatus(e.target.value)}>
-            <option value="">ทุกสถานะ</option>
-            {STATUSES.map(s => <option key={s.key} value={s.key}>{s.icon} {s.label}</option>)}
-          </select>
-          <button className="btn btn-ghost" style={{ padding: '0 16px' }} onClick={fetchAll} title="รีเฟรช">🔄</button>
-        </div>
-
-        {/* Legend */}
-        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 16 }}>
-          {sales.map(s => (
-            <div key={s.id} style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 12 }}>
-              <div style={{ width: 10, height: 10, borderRadius: 2, background: s.color }}/>
-              <span style={{ color: '#6b7280' }}>{s.name}</span>
-            </div>
-          ))}
-        </div>
-
-        {/* Job list */}
-        {loading ? (
-          <div style={{ textAlign: 'center', padding: 80, color: 'var(--ink-faint)' }}>กำลังโหลด...</div>
-        ) : displayed.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: 80, color: 'var(--ink-faint)', background: 'var(--white)', borderRadius: 'var(--radius-lg)', border: '1px dashed var(--rule)' }}>
-            <div style={{ fontSize: 42, marginBottom: 16 }}>🖨️</div>
-            <p style={{ fontSize: 16, fontWeight: 500 }}>{jobs.length ? 'ไม่พบงานที่ตรงกัน' : 'ยังไม่มีงานในระบบ'}</p>
-          </div>
-        ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            {displayed.map(j => (
-              <JobCard key={j.id} job={j} isProduction={isProduction} onClick={() => openJob(j.id)}/>
+            {sales.map(s => (
+              <button
+                key={s.id}
+                onClick={() => setFilter(String(s.id))}
+                style={{
+                  padding: '8px 16px', borderRadius: 'var(--radius-pill)', border: '1px solid',
+                  fontFamily: 'var(--font)', fontSize: 14, fontWeight: 600, cursor: 'pointer',
+                  transition: 'all 0.2s',
+                  background:  String(s.id) === filterSales ? s.color : 'var(--surface-card)',
+                  color:       String(s.id) === filterSales ? '#fff' : s.color,
+                  borderColor: String(s.id) === filterSales ? s.color : 'var(--rule)',
+                  boxShadow: String(s.id) === filterSales ? 'var(--shadow-md)' : 'var(--shadow-sm)',
+                }}
+              >
+                {s.name}
+                <span style={{
+                  marginLeft: 8, fontSize: 12, fontWeight: 700,
+                  background: String(s.id) === filterSales ? 'rgba(255,255,255,.25)' : s.color + '15',
+                  color: String(s.id) === filterSales ? '#fff' : s.color,
+                  padding: '2px 8px', borderRadius: 'var(--radius-pill)',
+                }}>
+                  {jobs.filter(j => j.sales_id === s.id).length}
+                </span>
+              </button>
             ))}
           </div>
-        )}
-      </div>
+
+          {/* Search + status filter */}
+          <div style={{ display: 'flex', gap: 12, marginBottom: 24, flexWrap: 'wrap' }}>
+            <div style={{ flex: 1, minWidth: 220, position: 'relative' }}>
+              <span style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: 'var(--ink-faint)', pointerEvents: 'none' }}>🔍</span>
+              <input className="input" style={{ paddingLeft: 38, height: '100%', background: 'var(--surface-card)' }} placeholder="ค้นหา Job, ชื่องาน..." value={search} onChange={e => setSearch(e.target.value)}/>
+            </div>
+            <select className="input" style={{ width: 180, background: 'var(--surface-card)' }} value={filterStatus} onChange={e => setFStatus(e.target.value)}>
+              <option value="">ทุกสถานะ</option>
+              {STATUSES.map(s => <option key={s.key} value={s.key}>{s.icon} {s.label}</option>)}
+            </select>
+            <button className="btn btn-ghost" style={{ padding: '0 16px', background: 'var(--surface-card)' }} onClick={fetchAll} title="รีเฟรช">🔄</button>
+          </div>
+
+          {/* Job list */}
+          {loading ? (
+            <div style={{ textAlign: 'center', padding: 80, color: 'var(--ink-faint)' }}>กำลังโหลด...</div>
+          ) : displayed.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: 80, color: 'var(--ink-faint)', background: 'var(--surface-card)', borderRadius: 'var(--radius-lg)', border: '1px dashed var(--rule)' }}>
+              <div style={{ fontSize: 42, marginBottom: 16 }}>🖨️</div>
+              <p style={{ fontSize: 16, fontWeight: 500 }}>{jobs.length ? 'ไม่พบงานที่ตรงกัน' : 'ยังไม่มีงานในระบบ'}</p>
+            </div>
+          ) : (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(380px, 1fr))', gap: 16 }}>
+              {displayed.map(j => (
+                <JobCard key={j.id} job={j} isProduction={isProduction} onClick={() => openJob(j.id)}/>
+              ))}
+            </div>
+          )}
+        </div>
+      </main>
 
       {/* Job modal */}
       {selected && (
@@ -232,7 +253,7 @@ export default function App() {
                 <label>Password</label>
                 <input className="input" type="password" value={loginForm.password} onChange={e => setLoginForm(f => ({...f, password: e.target.value}))} onKeyDown={e => e.key === 'Enter' && handleLogin()}/>
               </div>
-              {loginErr && <p style={{ color: '#dc2626', fontSize: 13 }}>{loginErr}</p>}
+              {loginErr && <p style={{ color: '#ef4444', fontSize: 13 }}>{loginErr}</p>}
             </div>
             <div className="modal-foot">
               <button className="btn btn-ghost" onClick={() => setLoginOpen(false)}>ยกเลิก</button>
@@ -246,3 +267,4 @@ export default function App() {
     </div>
   );
 }
+

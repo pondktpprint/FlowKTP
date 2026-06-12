@@ -58,11 +58,11 @@ app.get('/api/jobs/:id', async (req, res) => {
 
 // ── Jobs (production only) ────────────────────────
 app.post('/api/jobs', authMiddleware, async (req, res) => {
-  const { job_no, name, sales_id, due_date, paper, colors, coating, status, note } = req.body;
+  const { job_no, name, sales_id, due_date, paper, colors, coating, status, note, urgency_color } = req.body;
   if (!job_no || !name || !sales_id) return res.status(400).json({ error: 'job_no, name, sales_id required' });
   const [result] = await pool.execute(
-    'INSERT INTO jobs (job_no, name, sales_id, due_date, paper, colors, coating, status, note) VALUES (?,?,?,?,?,?,?,?,?)',
-    [job_no, name, sales_id, due_date || null, paper || null, colors || null, coating || 'ไม่เคลือบ', status || 'received', note || null]
+    'INSERT INTO jobs (job_no, name, sales_id, due_date, paper, colors, coating, status, note, urgency_color) VALUES (?,?,?,?,?,?,?,?,?,?)',
+    [job_no, name, sales_id, due_date || null, paper || null, colors || null, coating || 'ไม่เคลือบ', status || 'received', note || null, urgency_color || 'orange']
   );
   res.status(201).json({ id: result.insertId });
 });
@@ -72,10 +72,10 @@ app.put('/api/jobs/:id', authMiddleware, async (req, res) => {
   if (!existing[0]) return res.status(404).json({ error: 'Not found' });
 
   const old = existing[0];
-  const { job_no, name, sales_id, due_date, paper, colors, coating, status, note } = req.body;
+  const { job_no, name, sales_id, due_date, paper, colors, coating, status, note, urgency_color } = req.body;
 
   await pool.execute(
-    'UPDATE jobs SET job_no=?, name=?, sales_id=?, due_date=?, paper=?, colors=?, coating=?, status=?, note=? WHERE id=?',
+    'UPDATE jobs SET job_no=?, name=?, sales_id=?, due_date=?, paper=?, colors=?, coating=?, status=?, note=?, urgency_color=? WHERE id=?',
     [
       job_no ?? old.job_no,
       name ?? old.name,
@@ -86,6 +86,7 @@ app.put('/api/jobs/:id', authMiddleware, async (req, res) => {
       coating ?? old.coating,
       status ?? old.status,
       note ?? old.note,
+      urgency_color ?? old.urgency_color,
       req.params.id
     ]
   );

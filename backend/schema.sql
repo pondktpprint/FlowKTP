@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS jobs (
   paper       VARCHAR(100),
   colors      VARCHAR(50),
   coating     ENUM('ไม่เคลือบ','PVC ใส','PVC ด้าน','UV') DEFAULT 'ไม่เคลือบ',
+  urgency_color ENUM('red', 'orange', 'green') DEFAULT 'orange',
   status      ENUM(
                 'received',
                 'artwork',

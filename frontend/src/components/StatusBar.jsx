@@ -1,6 +1,6 @@
 import { STATUSES, STATUS_INDEX } from '../constants.js';
 
-export default function StatusBar({ status }) {
+export default function StatusBar({ status, onChange }) {
   const current = STATUS_INDEX[status] ?? 0;
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 0, overflowX: 'auto', padding: '12px 4px' }}>
@@ -10,12 +10,15 @@ export default function StatusBar({ status }) {
         const pending = i > current;
         return (
           <div key={s.key} style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
-            <div style={{
+            <div 
+              onClick={() => onChange && onChange(s.key)}
+              style={{
               display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
               padding: '6px 4px', borderRadius: 'var(--radius)',
-              background: active ? s.color + '10' : 'transparent',
+              background: active ? s.color + '15' : 'transparent',
               border: active ? `1px solid ${s.color}30` : '1px solid transparent',
-              minWidth: 64, transition: 'all 0.3s ease'
+              minWidth: 64, transition: 'all 0.3s ease',
+              cursor: onChange ? 'pointer' : 'default'
             }}>
               <div style={{
                 width: 36, height: 36, borderRadius: '50%',

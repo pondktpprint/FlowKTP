@@ -7,7 +7,7 @@ export default function JobModal({ job, sales, isProduction, onClose, onSaved, o
   const [form, setForm] = useState({
     job_no: '', name: '', sales_id: '', due_date: '',
     paper: '', colors: '', coating: 'ไม่เคลือบ',
-    status: 'received', note: '',
+    status: 'received', urgency_color: 'orange', note: '',
   });
   const [saving, setSaving] = useState(false);
   const [confirmDel, setConfirmDel] = useState(false);
@@ -23,6 +23,7 @@ export default function JobModal({ job, sales, isProduction, onClose, onSaved, o
       colors:   job.colors   || '',
       coating:  job.coating  || 'ไม่เคลือบ',
       status:   job.status   || 'received',
+      urgency_color: job.urgency_color || 'orange',
       note:     job.note     || '',
     });
   }, [job]);
@@ -58,13 +59,11 @@ export default function JobModal({ job, sales, isProduction, onClose, onSaved, o
         </div>
 
         <div className="modal-body" style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-          {/* Status bar (view mode) */}
-          {!isNew && (
-            <div style={{ background: 'var(--surface)', padding: '16px 20px', borderRadius: 'var(--radius)', border: '1px solid var(--rule)' }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--ink-soft)', textTransform: 'uppercase', letterSpacing: '.05em', marginBottom: 12 }}>ความคืบหน้า</div>
-              <StatusBar status={form.status} />
-            </div>
-          )}
+          {/* Status bar */}
+          <div style={{ background: 'var(--surface-card)', padding: '16px 20px', borderRadius: 'var(--radius)', border: '1px solid var(--rule)' }}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--ink-soft)', textTransform: 'uppercase', letterSpacing: '.05em', marginBottom: 12 }}>สถานะการทำงาน (กดเลือกได้)</div>
+            <StatusBar status={form.status} onChange={readOnly ? null : (st) => set('status', st)} />
+          </div>
 
           <div className="grid-2">
             <div className="field">
@@ -106,11 +105,32 @@ export default function JobModal({ job, sales, isProduction, onClose, onSaved, o
                 {COATINGS.map(c => <option key={c}>{c}</option>)}
               </select>
             </div>
-            <div className="field">
-              <label>สถานะ</label>
-              <select className="input" value={form.status} onChange={e => set('status', e.target.value)} disabled={readOnly}>
-                {STATUSES.map(s => <option key={s.key} value={s.key}>{s.icon} {s.label}</option>)}
-              </select>
+            <div className="field full" style={{ marginTop: 8 }}>
+              <label>สีสถานะความด่วน (ป้ายเรืองแสง)</label>
+              <div style={{ display: 'flex', gap: 12, marginTop: 4 }}>
+                {[
+                  { value: 'green', label: 'เสร็จแล้ว (เขียว)', color: '#10b981' },
+                  { value: 'orange', label: 'กำลังทำ (ส้ม)', color: '#f59e0b' },
+                  { value: 'red', label: 'ด่วน/ติดปัญหา (แดง)', color: '#ef4444' }
+                ].map(c => (
+                  <button
+                    key={c.value}
+                    type="button"
+                    onClick={() => set('urgency_color', c.value)}
+                    disabled={readOnly}
+                    style={{
+                      flex: 1, padding: '10px', borderRadius: 'var(--radius-sm)',
+                      background: form.urgency_color === c.value ? c.color + '20' : 'var(--surface)',
+                      border: `1px solid ${form.urgency_color === c.value ? c.color : 'var(--rule)'}`,
+                      color: form.urgency_color === c.value ? '#fff' : 'var(--ink-soft)',
+                      fontWeight: 600, fontSize: 13, cursor: readOnly ? 'default' : 'pointer',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8
+                    }}
+                  >
+                    <span className={`status-dot ${c.value}`} /> {c.label}
+                  </button>
+                ))}
+              </div>
             </div>
 
             <div className="field full">

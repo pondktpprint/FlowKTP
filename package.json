@@ -6,6 +6,6 @@
     "backend"
   ],
   "scripts": {
-    "deploy": "git pull && npm install && npm run build --workspace=frontend && pm2 restart printflow-api"
+    "deploy": "git pull origin main && npm install && npm run build --workspace=frontend && rm -rf /var/www/flowktp/* && cp -r frontend/dist/* /var/www/flowktp/ && pm2 restart printflow-api"
   }
 }

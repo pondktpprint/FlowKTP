@@ -5,9 +5,7 @@ export default function JobCard({ job, onClick, isProduction }) {
   const due = dueInfo(job.due_date);
   const isWaiting = job.status === 'wait_confirm';
 
-  let dotColor = 'orange';
-  if (job.status === 'done') dotColor = 'green';
-  else if (job.status === 'received') dotColor = 'red';
+  const dotColor = job.urgency_color || 'orange';
 
   return (
     <div
