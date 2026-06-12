@@ -209,6 +209,32 @@ export default function JobModal({ job, sales, isProduction, onClose, onSaved, o
               </div>
             </div>
           )}
+
+          {/* Comments */}
+          {!isNew && job.comments && (() => {
+            let parsed = [];
+            try { parsed = typeof job.comments === 'string' ? JSON.parse(job.comments) : job.comments; } catch(e){}
+            if (parsed.length === 0) return null;
+            return (
+              <div style={{ paddingTop: 16, borderTop: '1px solid var(--rule)' }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--ink-soft)', textTransform: 'uppercase', letterSpacing: '.05em', marginBottom: 12 }}>ประวัติการพูดคุย / ตามงาน</div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                  {parsed.map(c => (
+                    <div key={c.id} style={{ display: 'flex', gap: 12, fontSize: 13, color: 'var(--ink-soft)', alignItems: 'flex-start', background: c.is_rush ? 'rgba(239, 68, 68, 0.1)' : 'var(--surface)', padding: '10px 14px', borderRadius: 'var(--radius-sm)', border: c.is_rush ? '1px solid rgba(239,68,68,0.3)' : '1px solid transparent' }}>
+                      <span style={{ fontFamily: 'var(--mono)', flexShrink: 0, color: 'var(--ink)' }}>
+                        {new Date(c.created_at).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                      </span>
+                      <span style={{ flex: 1 }}>
+                        <span style={{ fontWeight: 600, color: c.sender === 'ฝ่ายผลิต' ? '#10b981' : 'var(--accent)', marginRight: 8 }}>{c.sender}:</span>
+                        <span style={{ color: 'var(--ink)' }}>{c.message}</span>
+                        {c.is_rush && <span style={{ marginLeft: 8, color: '#ef4444', fontWeight: 600 }}>🔥 (ด่วน!)</span>}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })()}
         </div>
 
         {isProduction && (

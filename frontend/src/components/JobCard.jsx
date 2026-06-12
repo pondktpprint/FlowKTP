@@ -1,6 +1,9 @@
-import { STATUS_MAP, dueInfo } from '../constants.js';
+import { useState } from 'react';
+import { STATUS_MAP, dueInfo, apiFetch } from '../constants.js';
 
-export default function JobCard({ job, onClick, isProduction }) {
+export default function JobCard({ job, onClick, isProduction, onAction }) {
+  const [comment, setComment] = useState('');
+  const [loading, setLoading] = useState(false);
   const s   = STATUS_MAP[job.status];
   const due = dueInfo(job.due_date);
   const isWaiting = job.status === 'wait_confirm';
@@ -14,21 +17,47 @@ export default function JobCard({ job, onClick, isProduction }) {
     st = job.special_techniques;
   }
 
+  const isRush = job.is_rush === 1;
+  const needsAttention = job.needs_attention === 1;
+  const attention = isRush || needsAttention;
+
+  const handleComment = async (e, forceRush) => {
+    e.stopPropagation();
+    if (!comment && !forceRush) return;
+    setLoading(true);
+    await apiFetch(`/api/jobs/${job.id}/comment`, {
+      method: 'POST',
+      body: { message: comment, is_rush: forceRush || isRush, sender: isProduction ? 'ฝ่ายผลิต' : job.sales_name }
+    });
+    setComment('');
+    setLoading(false);
+    if (onAction) onAction();
+  };
+
+  const handleAck = async (e) => {
+    e.stopPropagation();
+    setLoading(true);
+    await apiFetch(`/api/jobs/${job.id}/acknowledge`, { method: 'POST' });
+    setLoading(false);
+    if (onAction) onAction();
+  };
+
   return (
     <div
       onClick={onClick}
       style={{
         background: 'var(--surface-card)',
         borderLeft: `6px solid ${job.sales_color}`,
+        border: attention ? '2px solid #ef4444' : '1px solid transparent',
         borderRadius: '16px',
         padding: '24px',
         cursor: 'pointer',
         transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
         position: 'relative',
-        boxShadow: 'var(--shadow-sm)',
+        boxShadow: attention ? '0 0 15px rgba(239, 68, 68, 0.3)' : 'var(--shadow-sm)',
         display: 'flex',
         flexDirection: 'column',
-        gap: '24px'
+        gap: '20px'
       }}
       onMouseEnter={e => { e.currentTarget.style.boxShadow = 'var(--shadow-md)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
       onMouseLeave={e => { e.currentTarget.style.boxShadow = 'var(--shadow-sm)'; e.currentTarget.style.transform = 'translateY(0)'; }}
@@ -59,9 +88,27 @@ export default function JobCard({ job, onClick, isProduction }) {
       </div>
 
       {/* Middle Section */}
-      <div style={{ fontSize: '18px', fontWeight: 700, color: 'var(--ink)' }}>
-        ผู้รับงาน {job.sales_name}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ fontSize: '18px', fontWeight: 700, color: 'var(--ink)' }}>
+          ผู้รับงาน {job.sales_name}
+        </div>
+        {attention && (
+          <div style={{
+            background: '#ef4444', color: '#fff', fontSize: 12, fontWeight: 700,
+            padding: '4px 10px', borderRadius: 'var(--radius-pill)',
+            animation: 'pulse-red 2s infinite'
+          }}>
+            {isRush ? '🔥 งานด่วน!' : '⚠️ มีข้อความใหม่'}
+          </div>
+        )}
       </div>
+
+      {/* Note Section (If any) */}
+      {job.note && (
+        <div style={{ background: 'rgba(255,255,255,0.05)', padding: '10px 14px', borderRadius: '8px', fontSize: '13px', color: 'var(--ink-soft)' }}>
+          📝 <b>หมายเหตุ:</b> {job.note}
+        </div>
+      )}
 
       {/* Bottom Section: Tags */}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', alignItems: 'center' }}>
@@ -89,6 +136,41 @@ export default function JobCard({ job, onClick, isProduction }) {
         ))}
         {due && (
           <span className={`tag ${due.cls}`} style={{ background: '#f8fafc', fontWeight: 600, padding: '3px 8px', borderRadius: '12px', boxShadow: '0 1px 2px rgba(0,0,0,0.05)', fontSize: '11px' }}>📅 {due.label}</span>
+        )}
+      </div>
+
+      {/* Follow Up & Comment Section */}
+      <div style={{ display: 'flex', gap: '8px', borderTop: '1px solid var(--rule)', paddingTop: '16px', marginTop: '4px' }} onClick={e => e.stopPropagation()}>
+        {!isProduction ? (
+          <>
+            <input 
+              className="input" 
+              style={{ flex: 1, padding: '6px 12px', fontSize: 13, height: '36px' }} 
+              placeholder="พิมพ์ข้อความ / ตามงาน..." 
+              value={comment} 
+              onChange={e => setComment(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && handleComment(e)}
+              disabled={loading}
+            />
+            <button className="btn btn-dark" style={{ height: '36px', padding: '0 12px' }} onClick={handleComment} disabled={loading || !comment}>ส่ง</button>
+            <button className="btn btn-danger" style={{ height: '36px', padding: '0 12px', background: '#ef4444', color: '#fff' }} onClick={e => handleComment(e, true)} disabled={loading}>🔥 เร่งด่วน</button>
+          </>
+        ) : (
+          <div style={{ display: 'flex', width: '100%', gap: '8px' }}>
+            <input 
+              className="input" 
+              style={{ flex: 1, padding: '6px 12px', fontSize: 13, height: '36px' }} 
+              placeholder="พิมพ์ตอบกลับเซลล์..." 
+              value={comment} 
+              onChange={e => setComment(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && handleComment(e)}
+              disabled={loading}
+            />
+            <button className="btn btn-dark" style={{ height: '36px', padding: '0 12px' }} onClick={handleComment} disabled={loading || !comment}>ส่ง</button>
+            {attention && (
+              <button className="btn" style={{ height: '36px', padding: '0 16px', background: '#10b981', color: '#fff', fontWeight: 600, border: 'none' }} onClick={handleAck} disabled={loading}>✅ รับทราบ</button>
+            )}
+          </div>
         )}
       </div>
     </div>

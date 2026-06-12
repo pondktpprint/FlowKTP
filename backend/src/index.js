@@ -127,5 +127,52 @@ app.delete('/api/jobs/:id', authMiddleware, async (req, res) => {
   res.json({ ok: true });
 });
 
+// ── Comments & Notifications ──────────────────────
+app.post('/api/jobs/:id/comment', async (req, res) => {
+  try {
+    const { message, is_rush, sender } = req.body;
+    if (!message && !is_rush) return res.status(400).json({ error: 'message or is_rush required' });
+
+    const [existing] = await pool.execute('SELECT comments FROM jobs WHERE id = ?', [req.params.id]);
+    if (!existing[0]) return res.status(404).json({ error: 'Not found' });
+
+    let comments = [];
+    if (existing[0].comments) {
+      try { comments = JSON.parse(existing[0].comments); } catch(e){}
+    }
+
+    comments.push({
+      id: Date.now(),
+      sender: sender || 'Unknown',
+      message: message || '',
+      is_rush: !!is_rush,
+      created_at: new Date().toISOString()
+    });
+
+    await pool.execute(
+      'UPDATE jobs SET comments=?, needs_attention=?, is_rush=? WHERE id=?',
+      [JSON.stringify(comments), true, !!is_rush, req.params.id]
+    );
+
+    res.json({ ok: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/jobs/:id/acknowledge', authMiddleware, async (req, res) => {
+  try {
+    await pool.execute(
+      'UPDATE jobs SET needs_attention=false, is_rush=false WHERE id=?',
+      [req.params.id]
+    );
+    res.json({ ok: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => console.log(`✅ API running on :${PORT}`));

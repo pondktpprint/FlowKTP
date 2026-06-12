@@ -87,7 +87,13 @@ export default function App() {
       if (j.status === 'done') return false;
       if (filterSales !== 'all' && String(j.sales_id) !== filterSales) return false;
     }
-    if (filterStatus && j.status !== filterStatus) return false;
+    if (filterStatus) {
+      if (filterStatus === 'attention') {
+        if (!j.needs_attention && !j.is_rush) return false;
+      } else {
+        if (j.status !== filterStatus) return false;
+      }
+    }
     if (search) {
       const q = search.toLowerCase();
       if (![j.job_no, j.name, j.sales_name, j.note].join(' ').toLowerCase().includes(q)) return false;
@@ -247,6 +253,7 @@ export default function App() {
             </div>
             <select className="input" style={{ width: 180, background: 'var(--surface-card)' }} value={filterStatus} onChange={e => setFStatus(e.target.value)}>
               <option value="">ทุกสถานะ</option>
+              <option value="attention">⚠️ งานที่ต้องรับทราบ</option>
               {STATUSES.map(s => <option key={s.key} value={s.key}>{s.icon} {s.label}</option>)}
             </select>
             <button className="btn btn-ghost" style={{ padding: '0 16px', background: 'var(--surface-card)' }} onClick={fetchAll} title="รีเฟรช">🔄</button>
@@ -263,7 +270,7 @@ export default function App() {
           ) : (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(380px, 1fr))', gap: 16 }}>
               {displayed.map(j => (
-                <JobCard key={j.id} job={j} isProduction={isProduction} onClick={() => openJob(j.id)}/>
+                <JobCard key={j.id} job={j} isProduction={isProduction} onClick={() => openJob(j.id)} onAction={fetchAll}/>
               ))}
             </div>
           )}
