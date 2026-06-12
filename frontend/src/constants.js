@@ -15,6 +15,9 @@ export const STATUS_INDEX = Object.fromEntries(STATUSES.map((s, i) => [s.key, i]
 export const COATINGS = ['ไม่เคลือบ', 'PVC ใส', 'PVC ด้าน', 'UV'];
 export const COLORS_OPTIONS = ['1 สี', '2 สี', '4 สี (CMYK)', '4 สี + พิเศษ'];
 
+export const PRINT_SYSTEMS = ['Offset', 'Digital'];
+export const TECHNIQUES = ['ไดคัท 50%', 'ไดคัท 100%', 'ปั๊มนูน', 'ปั๊มเคทอง', 'Spot UV', 'พับ'];
+
 export function dueInfo(due) {
   if (!due) return null;
   const today = new Date(); today.setHours(0,0,0,0);

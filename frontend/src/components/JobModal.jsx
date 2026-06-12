@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
-import { STATUSES, COATINGS, COLORS_OPTIONS, STATUS_MAP, apiFetch } from '../constants.js';
+import { STATUSES, COATINGS, COLORS_OPTIONS, PRINT_SYSTEMS, TECHNIQUES, STATUS_MAP, apiFetch } from '../constants.js';
 import StatusBar from './StatusBar.jsx';
 
 export default function JobModal({ job, sales, isProduction, onClose, onSaved, onDeleted }) {
   const isNew = !job?.id;
   const [form, setForm] = useState({
     job_no: '', name: '', sales_id: '', due_date: '',
+    print_system: '', print_color: '',
     paper: '', colors: '', coating: 'ไม่เคลือบ',
+    special_techniques: [], foil_color: '', fold_type: '',
     status: 'received', urgency_color: 'orange', note: '',
   });
   const [saving, setSaving] = useState(false);
@@ -14,18 +16,31 @@ export default function JobModal({ job, sales, isProduction, onClose, onSaved, o
   const [toast, setToast] = useState('');
 
   useEffect(() => {
-    if (job) setForm({
-      job_no:   job.job_no   || '',
-      name:     job.name     || '',
-      sales_id: job.sales_id || '',
-      due_date: job.due_date ? job.due_date.slice(0,10) : '',
-      paper:    job.paper    || '',
-      colors:   job.colors   || '',
-      coating:  job.coating  || 'ไม่เคลือบ',
-      status:   job.status   || 'received',
-      urgency_color: job.urgency_color || 'orange',
-      note:     job.note     || '',
-    });
+    if (job) {
+      let st = [];
+      if (typeof job.special_techniques === 'string') {
+        try { st = JSON.parse(job.special_techniques); } catch(e){}
+      } else if (Array.isArray(job.special_techniques)) {
+        st = job.special_techniques;
+      }
+      setForm({
+        job_no:   job.job_no   || '',
+        name:     job.name     || '',
+        sales_id: job.sales_id || '',
+        due_date: job.due_date ? job.due_date.slice(0,10) : '',
+        print_system: job.print_system || '',
+        print_color: job.print_color || '',
+        paper:    job.paper    || '',
+        colors:   job.colors   || '',
+        coating:  job.coating  || 'ไม่เคลือบ',
+        special_techniques: st,
+        foil_color: job.foil_color || '',
+        fold_type: job.fold_type || '',
+        status:   job.status   || 'received',
+        urgency_color: job.urgency_color || 'orange',
+        note:     job.note     || '',
+      });
+    }
   }, [job]);
 
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
@@ -88,6 +103,18 @@ export default function JobModal({ job, sales, isProduction, onClose, onSaved, o
             </div>
 
             <div className="field">
+              <label>ระบบพิมพ์</label>
+              <select className="input" value={form.print_system} onChange={e => set('print_system', e.target.value)} disabled={readOnly}>
+                <option value="">— เลือก —</option>
+                {PRINT_SYSTEMS.map(c => <option key={c}>{c}</option>)}
+              </select>
+            </div>
+            <div className="field">
+              <label>พิมพ์สีอะไร (หน้า/หลัง)</label>
+              <input className="input" value={form.print_color} onChange={e => set('print_color', e.target.value)} disabled={readOnly} placeholder="เช่น 4/4, 1/0"/>
+            </div>
+
+            <div className="field">
               <label>ประเภทกระดาษ</label>
               <input className="input" value={form.paper} onChange={e => set('paper', e.target.value)} disabled={readOnly} placeholder="เช่น อาร์ตมัน 150g"/>
             </div>
@@ -105,6 +132,39 @@ export default function JobModal({ job, sales, isProduction, onClose, onSaved, o
                 {COATINGS.map(c => <option key={c}>{c}</option>)}
               </select>
             </div>
+
+            <div className="field full">
+              <label>เทคนิคพิเศษ</label>
+              <div style={{ display: 'flex', gap: '12px 20px', flexWrap: 'wrap', marginTop: 4 }}>
+                {TECHNIQUES.map(tech => (
+                  <label key={tech} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: 'var(--ink)' }}>
+                    <input type="checkbox" disabled={readOnly}
+                      checked={form.special_techniques.includes(tech)}
+                      onChange={e => {
+                        const newArr = e.target.checked 
+                          ? [...form.special_techniques, tech]
+                          : form.special_techniques.filter(t => t !== tech);
+                        set('special_techniques', newArr);
+                      }}
+                    />
+                    {tech}
+                  </label>
+                ))}
+              </div>
+            </div>
+            {form.special_techniques.includes('ปั๊มเคทอง') && (
+              <div className="field">
+                <label>สีฟอยล์ (ปั๊มเคทอง)</label>
+                <input className="input" value={form.foil_color} onChange={e => set('foil_color', e.target.value)} disabled={readOnly} placeholder="เช่น สีทอง, สีเงิน"/>
+              </div>
+            )}
+            {form.special_techniques.includes('พับ') && (
+              <div className="field">
+                <label>รูปแบบการพับ</label>
+                <input className="input" value={form.fold_type} onChange={e => set('fold_type', e.target.value)} disabled={readOnly} placeholder="เช่น 1/2, 2/3"/>
+              </div>
+            )}
+
             <div className="field full" style={{ marginTop: 8 }}>
               <label>สีสถานะความด่วน (ป้ายเรืองแสง)</label>
               <div style={{ display: 'flex', gap: 12, marginTop: 4 }}>

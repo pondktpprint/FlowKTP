@@ -59,11 +59,17 @@ app.get('/api/jobs/:id', async (req, res) => {
 // ── Jobs (production only) ────────────────────────
 app.post('/api/jobs', authMiddleware, async (req, res) => {
   try {
-    const { job_no, name, sales_id, due_date, paper, colors, coating, status, note, urgency_color } = req.body;
+    const { job_no, name, sales_id, due_date, print_system, print_color, paper, colors, coating, special_techniques, foil_color, fold_type, status, note, urgency_color } = req.body;
     if (!job_no || !name || !sales_id) return res.status(400).json({ error: 'job_no, name, sales_id required' });
     const [result] = await pool.execute(
-      'INSERT INTO jobs (job_no, name, sales_id, due_date, paper, colors, coating, status, note, urgency_color) VALUES (?,?,?,?,?,?,?,?,?,?)',
-      [job_no, name, sales_id, due_date || null, paper || null, colors || null, coating || 'ไม่เคลือบ', status || 'received', note || null, urgency_color || 'orange']
+      'INSERT INTO jobs (job_no, name, sales_id, due_date, print_system, print_color, paper, colors, coating, special_techniques, foil_color, fold_type, status, note, urgency_color) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+      [
+        job_no, name, sales_id, 
+        due_date || null, print_system || null, print_color || null, paper || null, colors || null, coating || 'ไม่เคลือบ',
+        special_techniques ? JSON.stringify(special_techniques) : null,
+        foil_color || null, fold_type || null,
+        status || 'received', note || null, urgency_color || 'orange'
+      ]
     );
     res.status(201).json({ id: result.insertId });
   } catch (err) {
@@ -78,18 +84,23 @@ app.put('/api/jobs/:id', authMiddleware, async (req, res) => {
     if (!existing[0]) return res.status(404).json({ error: 'Not found' });
 
     const old = existing[0];
-    const { job_no, name, sales_id, due_date, paper, colors, coating, status, note, urgency_color } = req.body;
+    const { job_no, name, sales_id, due_date, print_system, print_color, paper, colors, coating, special_techniques, foil_color, fold_type, status, note, urgency_color } = req.body;
 
     await pool.execute(
-      'UPDATE jobs SET job_no=?, name=?, sales_id=?, due_date=?, paper=?, colors=?, coating=?, status=?, note=?, urgency_color=? WHERE id=?',
+      'UPDATE jobs SET job_no=?, name=?, sales_id=?, due_date=?, print_system=?, print_color=?, paper=?, colors=?, coating=?, special_techniques=?, foil_color=?, fold_type=?, status=?, note=?, urgency_color=? WHERE id=?',
       [
         job_no ?? old.job_no,
         name ?? old.name,
         sales_id ?? old.sales_id,
         due_date === '' ? null : (due_date ?? old.due_date),
+        print_system === '' ? null : (print_system ?? old.print_system),
+        print_color === '' ? null : (print_color ?? old.print_color),
         paper === '' ? null : (paper ?? old.paper),
         colors === '' ? null : (colors ?? old.colors),
         coating ?? old.coating,
+        special_techniques ? JSON.stringify(special_techniques) : old.special_techniques,
+        foil_color === '' ? null : (foil_color ?? old.foil_color),
+        fold_type === '' ? null : (fold_type ?? old.fold_type),
         status ?? old.status,
         note === '' ? null : (note ?? old.note),
         urgency_color ?? old.urgency_color,

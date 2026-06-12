@@ -7,6 +7,13 @@ export default function JobCard({ job, onClick, isProduction }) {
 
   const dotColor = job.urgency_color || 'orange';
 
+  let st = [];
+  if (typeof job.special_techniques === 'string') {
+    try { st = JSON.parse(job.special_techniques); } catch(e){}
+  } else if (Array.isArray(job.special_techniques)) {
+    st = job.special_techniques;
+  }
+
   return (
     <div
       onClick={onClick}
@@ -70,15 +77,28 @@ export default function JobCard({ job, onClick, isProduction }) {
               <span style={{ opacity: 0.6 }}>👤</span> {job.sales_name}
             </span>
             <div style={{ width: 1, height: 12, background: 'var(--rule)' }} />
+            {job.print_system && (
+              <span className="tag" style={{ background: '#e0e7ff', color: '#4338ca' }}>🖨️ {job.print_system}</span>
+            )}
+            {job.print_color && (
+              <span className="tag" style={{ background: '#fce7f3', color: '#be185d' }}>🎨 {job.print_color}</span>
+            )}
             {job.paper && (
-              <span className="tag" style={{ background: '#f3f4f6', color: '#4b5563' }}>{job.paper}</span>
+              <span className="tag" style={{ background: '#f3f4f6', color: '#4b5563' }}>📄 {job.paper}</span>
             )}
             {job.colors && (
               <span className="tag" style={{ background: '#fffbeb', color: '#b45309' }}>{job.colors}</span>
             )}
             {job.coating && job.coating !== 'ไม่เคลือบ' && (
-              <span className="tag" style={{ background: '#eff6ff', color: '#1d4ed8' }}>{job.coating}</span>
+              <span className="tag" style={{ background: '#eff6ff', color: '#1d4ed8' }}>✨ {job.coating}</span>
             )}
+            {st.map(tech => (
+              <span key={tech} className="tag" style={{ background: '#f5f3ff', color: '#6d28d9' }}>
+                ⭐ {tech}
+                {tech === 'ปั๊มเคทอง' && job.foil_color ? ` (${job.foil_color})` : ''}
+                {tech === 'พับ' && job.fold_type ? ` (${job.fold_type})` : ''}
+              </span>
+            ))}
           </div>
 
           {due && (
