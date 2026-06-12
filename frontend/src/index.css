@@ -173,4 +173,13 @@ textarea.input { resize: vertical; min-height: 80px; }
 }
 .status-dot.red    { background: #ef4444; --glow-color: rgba(239, 68, 68, 0.4); }
 .status-dot.orange { background: #f59e0b; --glow-color: rgba(245, 158, 11, 0.4); }
-.status-dot.green  { background: #10b981; --glow-color: rgba(16, 185, 129, 0.4); }
+.status-dot.green { background: #10b981; box-shadow: 0 0 8px #10b981; }
+
+@keyframes pulse-red {
+  0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+  70% { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+.badge-waiting {
+  animation: pulse-red 2s infinite cubic-bezier(0.66, 0, 0, 1);
+}

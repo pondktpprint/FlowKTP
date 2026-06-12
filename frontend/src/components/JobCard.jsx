@@ -33,11 +33,12 @@ export default function JobCard({ job, onClick, isProduction }) {
     >
       {/* waiting badge */}
       {isWaiting && (
-        <div style={{
+        <div className="badge-waiting" style={{
           position: 'absolute', top: 16, right: 16,
-          background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: '1px solid rgba(239, 68, 68, 0.2)',
-          fontSize: 12, fontWeight: 700, padding: '4px 10px', borderRadius: 'var(--radius-pill)',
-        }}>⏳ รอคอนเฟิร์ม</div>
+          background: '#ef4444', color: '#fff', border: '1px solid #dc2626',
+          fontSize: 12, fontWeight: 700, padding: '4px 12px', borderRadius: 'var(--radius-pill)',
+          display: 'flex', alignItems: 'center', gap: 6, boxShadow: '0 4px 12px rgba(239,68,68,0.3)'
+        }}>⏳ รอคอนเฟิร์ม !</div>
       )}
 
       <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
@@ -63,11 +64,17 @@ export default function JobCard({ job, onClick, isProduction }) {
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8, flexWrap: 'wrap' }}>
             <span style={{ fontSize: 16, fontWeight: 600, color: 'var(--ink)' }}>{job.name}</span>
             <span style={{
-              fontSize: 12, fontWeight: 700, padding: '4px 10px', borderRadius: 'var(--radius-pill)',
-              background: s?.color + '15', color: s?.color, border: `1px solid ${s?.color}40`,
-              display: 'inline-flex', alignItems: 'center', gap: 6
+              fontSize: 13, fontWeight: 700, padding: '6px 14px', borderRadius: 'var(--radius-pill)',
+              background: `linear-gradient(135deg, ${s?.color}, ${s?.color}dd)`, color: '#fff',
+              boxShadow: `0 2px 8px ${s?.color}40`, border: `1px solid ${s?.color}80`,
+              display: 'inline-flex', alignItems: 'center', gap: 8, letterSpacing: '0.02em'
             }}>
-              <span className={`status-dot ${dotColor}`}></span>
+              <span style={{ fontSize: 16 }}>{s?.icon}</span>
+              <span style={{ 
+                width: 8, height: 8, borderRadius: '50%', 
+                background: dotColor === 'green' ? '#10b981' : dotColor === 'red' ? '#ef4444' : '#f59e0b',
+                boxShadow: `0 0 6px ${dotColor === 'green' ? '#10b981' : dotColor === 'red' ? '#ef4444' : '#f59e0b'}`
+              }}></span>
               {s?.label}
             </span>
           </div>
