@@ -58,47 +58,57 @@ app.get('/api/jobs/:id', async (req, res) => {
 
 // ── Jobs (production only) ────────────────────────
 app.post('/api/jobs', authMiddleware, async (req, res) => {
-  const { job_no, name, sales_id, due_date, paper, colors, coating, status, note, urgency_color } = req.body;
-  if (!job_no || !name || !sales_id) return res.status(400).json({ error: 'job_no, name, sales_id required' });
-  const [result] = await pool.execute(
-    'INSERT INTO jobs (job_no, name, sales_id, due_date, paper, colors, coating, status, note, urgency_color) VALUES (?,?,?,?,?,?,?,?,?,?)',
-    [job_no, name, sales_id, due_date || null, paper || null, colors || null, coating || 'ไม่เคลือบ', status || 'received', note || null, urgency_color || 'orange']
-  );
-  res.status(201).json({ id: result.insertId });
+  try {
+    const { job_no, name, sales_id, due_date, paper, colors, coating, status, note, urgency_color } = req.body;
+    if (!job_no || !name || !sales_id) return res.status(400).json({ error: 'job_no, name, sales_id required' });
+    const [result] = await pool.execute(
+      'INSERT INTO jobs (job_no, name, sales_id, due_date, paper, colors, coating, status, note, urgency_color) VALUES (?,?,?,?,?,?,?,?,?,?)',
+      [job_no, name, sales_id, due_date || null, paper || null, colors || null, coating || 'ไม่เคลือบ', status || 'received', note || null, urgency_color || 'orange']
+    );
+    res.status(201).json({ id: result.insertId });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
 });
 
 app.put('/api/jobs/:id', authMiddleware, async (req, res) => {
-  const [existing] = await pool.execute('SELECT * FROM jobs WHERE id = ?', [req.params.id]);
-  if (!existing[0]) return res.status(404).json({ error: 'Not found' });
+  try {
+    const [existing] = await pool.execute('SELECT * FROM jobs WHERE id = ?', [req.params.id]);
+    if (!existing[0]) return res.status(404).json({ error: 'Not found' });
 
-  const old = existing[0];
-  const { job_no, name, sales_id, due_date, paper, colors, coating, status, note, urgency_color } = req.body;
+    const old = existing[0];
+    const { job_no, name, sales_id, due_date, paper, colors, coating, status, note, urgency_color } = req.body;
 
-  await pool.execute(
-    'UPDATE jobs SET job_no=?, name=?, sales_id=?, due_date=?, paper=?, colors=?, coating=?, status=?, note=?, urgency_color=? WHERE id=?',
-    [
-      job_no ?? old.job_no,
-      name ?? old.name,
-      sales_id ?? old.sales_id,
-      due_date ?? old.due_date,
-      paper ?? old.paper,
-      colors ?? old.colors,
-      coating ?? old.coating,
-      status ?? old.status,
-      note ?? old.note,
-      urgency_color ?? old.urgency_color,
-      req.params.id
-    ]
-  );
-
-  // Log status change
-  if (status && status !== old.status) {
     await pool.execute(
-      'INSERT INTO job_history (job_id, old_status, new_status, note) VALUES (?,?,?,?)',
-      [req.params.id, old.status, status, req.body.history_note || null]
+      'UPDATE jobs SET job_no=?, name=?, sales_id=?, due_date=?, paper=?, colors=?, coating=?, status=?, note=?, urgency_color=? WHERE id=?',
+      [
+        job_no ?? old.job_no,
+        name ?? old.name,
+        sales_id ?? old.sales_id,
+        due_date === '' ? null : (due_date ?? old.due_date),
+        paper === '' ? null : (paper ?? old.paper),
+        colors === '' ? null : (colors ?? old.colors),
+        coating ?? old.coating,
+        status ?? old.status,
+        note === '' ? null : (note ?? old.note),
+        urgency_color ?? old.urgency_color,
+        req.params.id
+      ]
     );
+
+    // Log status change
+    if (status && status !== old.status) {
+      await pool.execute(
+        'INSERT INTO job_history (job_id, old_status, new_status, note) VALUES (?,?,?,?)',
+        [req.params.id, old.status, status, req.body.history_note || null]
+      );
+    }
+    res.json({ ok: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
   }
-  res.json({ ok: true });
 });
 
 app.delete('/api/jobs/:id', authMiddleware, async (req, res) => {
