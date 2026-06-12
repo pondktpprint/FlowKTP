@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { STATUSES, apiFetch } from './constants.js';
 import JobCard from './components/JobCard.jsx';
 import JobModal from './components/JobModal.jsx';
+import Dashboard from './components/Dashboard.jsx';
 import './index.css';
 
 export default function App() {
@@ -11,6 +12,7 @@ export default function App() {
   const [filterStatus, setFStatus]= useState('');
   const [search, setSearch]       = useState('');
   const [selected, setSelected]   = useState(null);  // job object or 'new'
+  const [currentView, setCurrentView] = useState('jobs'); // 'jobs' or 'stats'
   const [isProduction, setIsProd] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
   const [loginForm, setLoginForm] = useState({ username: '', password: '' });
@@ -116,18 +118,20 @@ export default function App() {
         </div>
       )}
 
-      <div style={{ display: 'flex', height: '100vh', background: 'var(--surface)', overflow: 'hidden' }}>
-        {/* Sidebar */}
-      <aside style={{ width: 260, background: 'var(--surface-card)', borderRight: '1px solid var(--rule)', display: 'flex', flexDirection: 'column', flexShrink: 0 }}>
+      <div className="layout-container">
+        {/* Sidebar Desktop */}
+      <aside className="sidebar-desktop">
         <div style={{ padding: '24px 28px', borderBottom: '1px solid var(--rule)' }}>
           <span style={{ fontFamily: 'var(--font)', fontWeight: 800, fontSize: 16, letterSpacing: '.02em', color: 'var(--accent)' }}>Kittiporn Printing Co.,Ltd</span>
         </div>
         
         <nav style={{ flex: 1, padding: '28px 20px', display: 'flex', flexDirection: 'column', gap: 8 }}>
           <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--ink-faint)', textTransform: 'uppercase', marginBottom: 8, paddingLeft: 8 }}>MENU</div>
-          <button className="btn btn-ghost" style={{ justifyContent: 'flex-start', background: 'rgba(255,255,255,0.05)', color: 'var(--ink)', border: 'none' }}>🖨️ แดชบอร์ดงานพิมพ์</button>
-          <button className="btn btn-ghost" style={{ justifyContent: 'flex-start', border: 'none', opacity: 0.5 }} disabled>📊 สถิติรายเดือน (เร็วๆนี้)</button>
-          <button className="btn btn-ghost" style={{ justifyContent: 'flex-start', border: 'none', opacity: 0.5 }} disabled>👥 จัดการเซลล์ (เร็วๆนี้)</button>
+          <button className="btn btn-ghost" style={{ justifyContent: 'flex-start', background: currentView === 'jobs' ? 'rgba(255,255,255,0.05)' : 'transparent', color: 'var(--ink)', border: 'none' }} onClick={() => setCurrentView('jobs')}>🖨️ แดชบอร์ดงานพิมพ์</button>
+          
+          {isProduction && (
+            <button className="btn btn-ghost" style={{ justifyContent: 'flex-start', background: currentView === 'stats' ? 'rgba(255,255,255,0.05)' : 'transparent', color: 'var(--ink)', border: 'none' }} onClick={() => setCurrentView('stats')}>📊 สถิติภาพรวม</button>
+          )}
         </nav>
 
         <div style={{ padding: 24, borderTop: '1px solid var(--rule)' }}>
@@ -149,11 +153,11 @@ export default function App() {
       </aside>
 
       {/* Main Content */}
-      <main style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, overflowY: 'auto' }}>
-        <div style={{ padding: '40px 48px', maxWidth: 1200, margin: '0 auto', width: '100%' }}>
+      <main className="main-content">
+        <div style={{ maxWidth: 1200, margin: '0 auto', width: '100%' }}>
           
           {/* Greeting Banner */}
-          <div style={{
+          <div className="greeting-banner" style={{
             background: 'linear-gradient(135deg, #f59e0b 0%, #10b981 100%)',
             borderRadius: 'var(--radius-lg)',
             padding: '32px 40px',
@@ -167,8 +171,12 @@ export default function App() {
             {isProduction && <button className="btn" style={{ background: '#fff', color: '#000', fontWeight: 600, border: 'none' }} onClick={() => setSelected('new')}>+ เพิ่มงานใหม่</button>}
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
-            <h2 style={{ fontSize: 20, fontWeight: 600 }}>คิวงานทั้งหมด ({jobs.length})</h2>
+          {currentView === 'stats' && isProduction ? (
+            <Dashboard jobs={jobs} sales={sales} />
+          ) : (
+            <>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
+                <h2 style={{ fontSize: 20, fontWeight: 600 }}>คิวงานทั้งหมด ({jobs.length})</h2>
             {waitCount > 0 && (
               <span style={{ 
                 background: 'rgba(239, 68, 68, 0.15)', color: '#fca5a5', 
@@ -181,7 +189,7 @@ export default function App() {
           </div>
 
           {/* Sales filter tabs */}
-          <div style={{ display: 'flex', gap: 10, marginBottom: 20, flexWrap: 'wrap', alignItems: 'center' }}>
+          <div className="filter-tabs" style={{ display: 'flex', gap: 10, marginBottom: 20, flexWrap: 'wrap', alignItems: 'center' }}>
             <button
               onClick={() => setFilter('all')}
               style={{
@@ -274,8 +282,35 @@ export default function App() {
               ))}
             </div>
           )}
+            </>
+          )}
         </div>
       </main>
+
+      {/* Mobile Bottom Nav */}
+      <div className="mobile-bottom-nav">
+        <div className={`mobile-nav-item ${currentView === 'jobs' ? 'active' : ''}`} onClick={() => setCurrentView('jobs')}>
+          <span className="icon">🖨️</span>
+          <span>งานพิมพ์</span>
+        </div>
+        {isProduction && (
+          <div className={`mobile-nav-item ${currentView === 'stats' ? 'active' : ''}`} onClick={() => setCurrentView('stats')}>
+            <span className="icon">📊</span>
+            <span>สถิติ</span>
+          </div>
+        )}
+        {isProduction ? (
+          <div className="mobile-nav-item" onClick={handleLogout}>
+            <span className="icon">🚪</span>
+            <span>ออก</span>
+          </div>
+        ) : (
+          <div className="mobile-nav-item" onClick={() => setLoginOpen(true)}>
+            <span className="icon">🔐</span>
+            <span>ล็อกอิน</span>
+          </div>
+        )}
+      </div>
 
       {/* Job modal */}
       {selected && (
