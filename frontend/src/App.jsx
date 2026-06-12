@@ -75,7 +75,12 @@ export default function App() {
 
   // Filter
   const displayed = jobs.filter(j => {
-    if (filterSales !== 'all' && String(j.sales_id) !== filterSales) return false;
+    if (filterSales === 'done') {
+      if (j.status !== 'done') return false;
+    } else {
+      if (j.status === 'done') return false;
+      if (filterSales !== 'all' && String(j.sales_id) !== filterSales) return false;
+    }
     if (filterStatus && j.status !== filterStatus) return false;
     if (search) {
       const q = search.toLowerCase();
@@ -166,6 +171,29 @@ export default function App() {
               }}
             >ทั้งหมด</button>
 
+            <button
+              onClick={() => setFilter('done')}
+              style={{
+                padding: '8px 16px', borderRadius: 'var(--radius-pill)', border: '1px solid',
+                fontFamily: 'var(--font)', fontSize: 14, fontWeight: 600, cursor: 'pointer',
+                transition: 'all 0.2s',
+                background: filterSales === 'done' ? '#10b981' : 'var(--surface-card)',
+                color:      filterSales === 'done' ? '#fff' : '#10b981',
+                borderColor: filterSales === 'done' ? '#10b981' : 'var(--rule)',
+                boxShadow: filterSales === 'done' ? 'var(--shadow-md)' : 'var(--shadow-sm)',
+              }}
+            >
+              เสร็จแล้ว
+              <span style={{
+                marginLeft: 8, fontSize: 12, fontWeight: 700,
+                background: filterSales === 'done' ? 'rgba(255,255,255,.25)' : 'rgba(16,185,129,0.1)',
+                color: filterSales === 'done' ? '#fff' : '#10b981',
+                padding: '2px 8px', borderRadius: 'var(--radius-pill)',
+              }}>
+                {jobs.filter(j => j.status === 'done').length}
+              </span>
+            </button>
+
             {sales.map(s => (
               <button
                 key={s.id}
@@ -187,7 +215,7 @@ export default function App() {
                   color: String(s.id) === filterSales ? '#fff' : s.color,
                   padding: '2px 8px', borderRadius: 'var(--radius-pill)',
                 }}>
-                  {jobs.filter(j => j.sales_id === s.id).length}
+                  {jobs.filter(j => j.sales_id === s.id && j.status !== 'done').length}
                 </span>
               </button>
             ))}
