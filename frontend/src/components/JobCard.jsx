@@ -143,17 +143,34 @@ export default function JobCard({ job, onClick, isProduction, onAction }) {
       <div style={{ display: 'flex', gap: '8px', borderTop: '1px solid var(--rule)', paddingTop: '16px', marginTop: '4px' }} onClick={e => e.stopPropagation()}>
         {!isProduction ? (
           <>
+            {job.status === 'wait_confirm' && (
+              <button 
+                className="btn" 
+                style={{ height: '36px', padding: '0 12px', background: '#10b981', color: '#fff', border: 'none', fontWeight: 600, flexShrink: 0 }} 
+                onClick={async (e) => {
+                  e.stopPropagation();
+                  if (!window.confirm('ยืนยันแบบและส่งเข้าผลิตต่อ?')) return;
+                  setLoading(true);
+                  await apiFetch(`/api/jobs/${job.id}/sales-confirm`, { method: 'POST' });
+                  setLoading(false);
+                  if (onAction) onAction();
+                }}
+                disabled={loading}
+              >
+                ✅ คอนเฟิร์มแบบ
+              </button>
+            )}
             <input 
               className="input" 
-              style={{ flex: 1, padding: '6px 12px', fontSize: 13, height: '36px' }} 
+              style={{ flex: 1, minWidth: 0, padding: '6px 12px', fontSize: 13, height: '36px' }} 
               placeholder="พิมพ์ข้อความ / ตามงาน..." 
               value={comment} 
               onChange={e => setComment(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && handleComment(e)}
               disabled={loading}
             />
-            <button className="btn btn-dark" style={{ height: '36px', padding: '0 12px' }} onClick={handleComment} disabled={loading || !comment}>ส่ง</button>
-            <button className="btn btn-danger" style={{ height: '36px', padding: '0 12px', background: '#ef4444', color: '#fff' }} onClick={e => handleComment(e, true)} disabled={loading}>🔥 เร่งด่วน</button>
+            <button className="btn btn-dark" style={{ height: '36px', padding: '0 12px', flexShrink: 0 }} onClick={handleComment} disabled={loading || !comment}>ส่ง</button>
+            <button className="btn btn-danger" style={{ height: '36px', padding: '0 12px', background: '#ef4444', color: '#fff', flexShrink: 0 }} onClick={e => handleComment(e, true)} disabled={loading}>🔥 เร่งด่วน</button>
           </>
         ) : (
           <div style={{ display: 'flex', width: '100%', gap: '8px' }}>

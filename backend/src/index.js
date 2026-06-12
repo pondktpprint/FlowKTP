@@ -174,5 +174,40 @@ app.post('/api/jobs/:id/acknowledge', authMiddleware, async (req, res) => {
   }
 });
 
+app.post('/api/jobs/:id/sales-confirm', async (req, res) => {
+  try {
+    const [existing] = await pool.execute('SELECT * FROM jobs WHERE id = ?', [req.params.id]);
+    if (!existing[0]) return res.status(404).json({ error: 'Not found' });
+    const job = existing[0];
+    
+    let comments = [];
+    if (job.comments) {
+      try { comments = JSON.parse(job.comments); } catch(e){}
+    }
+    comments.push({
+      id: Date.now(),
+      sender: 'ระบบ (System)',
+      message: '✅ เซลล์คอนเฟิร์มแบบเรียบร้อยแล้ว ให้เริ่มผลิตต่อได้เลย',
+      is_rush: false,
+      created_at: new Date().toISOString()
+    });
+
+    await pool.execute(
+      'UPDATE jobs SET status=?, comments=?, needs_attention=? WHERE id=?',
+      ['plate', JSON.stringify(comments), true, req.params.id]
+    );
+
+    await pool.execute(
+      'INSERT INTO job_history (job_id, old_status, new_status, note) VALUES (?,?,?,?)',
+      [req.params.id, job.status, 'plate', 'เซลล์กดคอนเฟิร์มผ่านระบบ']
+    );
+
+    res.json({ ok: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => console.log(`✅ API running on :${PORT}`));
