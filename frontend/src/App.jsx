@@ -91,7 +91,7 @@ export default function App() {
       {/* Sidebar */}
       <aside style={{ width: 260, background: 'var(--surface-card)', borderRight: '1px solid var(--rule)', display: 'flex', flexDirection: 'column', flexShrink: 0 }}>
         <div style={{ padding: '24px 28px', borderBottom: '1px solid var(--rule)' }}>
-          <span style={{ fontFamily: 'var(--mono)', fontWeight: 800, fontSize: 18, letterSpacing: '.05em', color: 'var(--accent)' }}>PRINTFLOW</span>
+          <span style={{ fontFamily: 'var(--font)', fontWeight: 800, fontSize: 16, letterSpacing: '.02em', color: 'var(--accent)' }}>Kittiporn Printing Co.,Ltd</span>
         </div>
         
         <nav style={{ flex: 1, padding: '28px 20px', display: 'flex', flexDirection: 'column', gap: 8 }}>
