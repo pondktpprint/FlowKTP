@@ -11,9 +11,9 @@
   --white:      #ffffff;
   --accent:     #111827;
   
-  --radius-sm:  6px;
-  --radius:     10px;
-  --radius-lg:  16px;
+  --radius-sm:  8px;
+  --radius:     12px;
+  --radius-lg:  20px;
   --radius-pill: 9999px;
   
   --font:       'IBM Plex Sans Thai', system-ui, -apple-system, sans-serif;
@@ -157,3 +157,19 @@ textarea.input { resize: vertical; min-height: 80px; }
   backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(255,255,255,0.08);
 }
+
+/* ── Status Glow Dot ── */
+@keyframes glow-pulse {
+  0%   { box-shadow: 0 0 0 0px var(--glow-color); }
+  70%  { box-shadow: 0 0 0 6px transparent; }
+  100% { box-shadow: 0 0 0 0px transparent; }
+}
+
+.status-dot {
+  width: 10px; height: 10px; flex-shrink: 0;
+  border-radius: 50%; display: inline-block;
+  animation: glow-pulse 2s infinite cubic-bezier(0.66, 0, 0, 1);
+}
+.status-dot.red    { background: #ef4444; --glow-color: rgba(239, 68, 68, 0.4); }
+.status-dot.orange { background: #f59e0b; --glow-color: rgba(245, 158, 11, 0.4); }
+.status-dot.green  { background: #10b981; --glow-color: rgba(16, 185, 129, 0.4); }

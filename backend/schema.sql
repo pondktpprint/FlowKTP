@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS sales (
 
 INSERT INTO sales (name, color) VALUES
   ('สุรีวรรณ', '#3b82f6'),
-  ('ยอดตะวัน', '#10b981'),
+  ('ยอตะวัน', '#10b981'),
   ('อภิรดี',   '#f97316'),
   ('จันทิมา',  '#8b5cf6');
 

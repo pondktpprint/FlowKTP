@@ -5,6 +5,10 @@ export default function JobCard({ job, onClick, isProduction }) {
   const due = dueInfo(job.due_date);
   const isWaiting = job.status === 'wait_confirm';
 
+  let dotColor = 'orange';
+  if (job.status === 'done') dotColor = 'green';
+  else if (job.status === 'received') dotColor = 'red';
+
   return (
     <div
       onClick={onClick}
@@ -55,8 +59,12 @@ export default function JobCard({ job, onClick, isProduction }) {
             <span style={{ fontSize: 16, fontWeight: 600, color: 'var(--ink)' }}>{job.name}</span>
             <span style={{
               fontSize: 12, fontWeight: 700, padding: '4px 10px', borderRadius: 'var(--radius-pill)',
-              background: s?.color + '15', color: s?.color, border: `1px solid ${s?.color}40`
-            }}>{s?.icon} {s?.label}</span>
+              background: s?.color + '15', color: s?.color, border: `1px solid ${s?.color}40`,
+              display: 'inline-flex', alignItems: 'center', gap: 6
+            }}>
+              <span className={`status-dot ${dotColor}`}></span>
+              {s?.label}
+            </span>
           </div>
 
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 8, alignItems: 'center' }}>
