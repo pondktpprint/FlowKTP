@@ -276,7 +276,7 @@ export default function App() {
               <p style={{ fontSize: 16, fontWeight: 500 }}>{jobs.length ? 'ไม่พบงานที่ตรงกัน' : 'ยังไม่มีงานในระบบ'}</p>
             </div>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(380px, 1fr))', gap: 16 }}>
+            <div className="job-grid">
               {displayed.map(j => (
                 <JobCard key={j.id} job={j} isProduction={isProduction} onClick={() => openJob(j.id)} onAction={fetchAll}/>
               ))}

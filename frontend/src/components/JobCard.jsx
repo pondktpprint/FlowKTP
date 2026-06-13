@@ -8,7 +8,18 @@ export default function JobCard({ job, onClick, isProduction, onAction }) {
   const due = dueInfo(job.due_date);
   const isWaiting = job.status === 'wait_confirm';
 
-  const dotColor = job.urgency_color || 'orange';
+  let lightColor = '#f59e0b'; // orange (กำลังทำ)
+  let lightShadow = 'rgba(245, 158, 11, 0.4)';
+  let lightTitle = 'กำลังทำ';
+  if (job.status === 'received') {
+    lightColor = '#94a3b8'; // gray
+    lightShadow = 'rgba(148, 163, 184, 0.4)';
+    lightTitle = 'ยังไม่ได้ทำ';
+  } else if (job.status === 'done') {
+    lightColor = '#10b981'; // green
+    lightShadow = 'rgba(16, 185, 129, 0.4)';
+    lightTitle = 'เสร็จแล้ว';
+  }
 
   let st = [];
   if (typeof job.special_techniques === 'string') {
@@ -65,8 +76,11 @@ export default function JobCard({ job, onClick, isProduction, onAction }) {
       {/* Top Section */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '4px' }}>
+            <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: lightColor, boxShadow: `0 0 8px ${lightShadow}` }} title={lightTitle}></div>
+            <span style={{ fontSize: '18px', fontWeight: 700, color: 'var(--ink-faint)' }}>{job.job_no}</span>
+          </div>
           <h3 style={{ margin: 0, fontSize: '24px', fontWeight: 800, color: 'var(--ink)' }}>{job.name}</h3>
-          <span style={{ fontSize: '18px', fontWeight: 700, color: 'var(--ink-faint)' }}>{job.job_no}</span>
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8 }}>
@@ -77,11 +91,6 @@ export default function JobCard({ job, onClick, isProduction, onAction }) {
             display: 'inline-flex', alignItems: 'center', gap: 8, letterSpacing: '0.02em'
           }}>
             <span style={{ fontSize: 18 }}>{s?.icon}</span>
-            <span style={{ 
-              width: 8, height: 8, borderRadius: '50%', 
-              background: dotColor === 'green' ? '#10b981' : dotColor === 'red' ? '#ef4444' : '#f59e0b',
-              boxShadow: `0 0 6px ${dotColor === 'green' ? '#10b981' : dotColor === 'red' ? '#ef4444' : '#f59e0b'}`
-            }}></span>
             {s?.label}
           </span>
         </div>
