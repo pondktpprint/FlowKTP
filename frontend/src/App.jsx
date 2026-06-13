@@ -20,6 +20,13 @@ export default function App() {
   const [toast, setToast]         = useState('');
   const [loading, setLoading]     = useState(true);
   const [showSplash, setShowSplash] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const jobsPerPage = 10;
+
+  // Reset page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filterSales, filterStatus, search]);
 
   useEffect(() => {
     const timer = setTimeout(() => setShowSplash(false), 2500);
@@ -276,11 +283,37 @@ export default function App() {
               <p style={{ fontSize: 16, fontWeight: 500 }}>{jobs.length ? 'ไม่พบงานที่ตรงกัน' : 'ยังไม่มีงานในระบบ'}</p>
             </div>
           ) : (
-            <div className="job-grid">
-              {displayed.map(j => (
-                <JobCard key={j.id} job={j} isProduction={isProduction} onClick={() => openJob(j.id)} onAction={fetchAll}/>
-              ))}
-            </div>
+            <>
+              <div className="job-grid">
+                {displayed.slice((currentPage - 1) * jobsPerPage, currentPage * jobsPerPage).map(j => (
+                  <JobCard key={j.id} job={j} isProduction={isProduction} onClick={() => openJob(j.id)} onAction={fetchAll}/>
+                ))}
+              </div>
+              
+              {Math.ceil(displayed.length / jobsPerPage) > 1 && (
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 8, marginTop: 32, paddingBottom: 16 }}>
+                  <button className="btn btn-ghost" disabled={currentPage === 1} onClick={() => { setCurrentPage(p => p - 1); window.scrollTo(0,0); }}>← ก่อนหน้า</button>
+                  <div style={{ display: 'flex', gap: 6, overflowX: 'auto', paddingBottom: 4, maxWidth: '50vw' }}>
+                    {Array.from({length: Math.ceil(displayed.length / jobsPerPage)}, (_, i) => i + 1).map(p => (
+                      <button 
+                        key={p} 
+                        className="btn" 
+                        style={{ 
+                          width: 36, height: 36, padding: 0, flexShrink: 0,
+                          background: p === currentPage ? 'var(--accent)' : 'var(--surface-card)',
+                          color: p === currentPage ? '#fff' : 'var(--ink)',
+                          border: p === currentPage ? 'none' : '1px solid var(--rule)'
+                        }}
+                        onClick={() => { setCurrentPage(p); window.scrollTo(0,0); }}
+                      >
+                        {p}
+                      </button>
+                    ))}
+                  </div>
+                  <button className="btn btn-ghost" disabled={currentPage === Math.ceil(displayed.length / jobsPerPage)} onClick={() => { setCurrentPage(p => p + 1); window.scrollTo(0,0); }}>ถัดไป →</button>
+                </div>
+              )}
+            </>
           )}
             </>
           )}
