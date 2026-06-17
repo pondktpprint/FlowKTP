@@ -126,6 +126,13 @@ export default function App() {
       )}
 
       <div className="layout-container">
+        {/* Background Blobs */}
+        <div className="bg-blobs">
+          <div className="blob blob-1"></div>
+          <div className="blob blob-2"></div>
+          <div className="blob blob-3"></div>
+        </div>
+
         {/* Sidebar Desktop */}
       <aside className="sidebar-desktop">
         <div style={{ padding: '32px 24px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
