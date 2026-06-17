@@ -117,21 +117,17 @@ export default function App() {
       {/* Splash Screen */}
       {showSplash && (
         <div className="splash-screen">
-          <img src="/splash.png" alt="Splash Screen" className="splash-img" onError={(e) => e.target.style.display = 'none'} />
+          <div className="bg-marble" style={{ opacity: 0.4 }}></div>
           <div className="splash-text">
-            <h1>Kittiporn Printing</h1>
+            <h1>Printflow</h1>
             <p>Production on Demand</p>
           </div>
         </div>
       )}
 
       <div className="layout-container">
-        {/* Background Blobs */}
-        <div className="bg-blobs">
-          <div className="blob blob-1"></div>
-          <div className="blob blob-2"></div>
-          <div className="blob blob-3"></div>
-        </div>
+        {/* Background Marble */}
+        <div className="bg-marble"></div>
 
         {/* Sidebar Desktop */}
       <aside className="sidebar-desktop">
