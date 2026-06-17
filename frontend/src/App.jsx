@@ -351,6 +351,7 @@ export default function App() {
           job={selected === 'new' ? null : selected}
           sales={sales}
           isProduction={isProduction}
+          companies={[...new Set(jobs.map(j => j.company_name).filter(Boolean))].sort()}
           onClose={() => setSelected(null)}
           onSaved={() => { fetchAll(); showToast('✅ บันทึกแล้ว'); }}
           onDeleted={() => { fetchAll(); showToast('🗑️ ลบแล้ว'); }}

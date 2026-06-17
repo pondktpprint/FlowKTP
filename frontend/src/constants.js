@@ -12,7 +12,7 @@ export const STATUSES = [
 export const STATUS_MAP = Object.fromEntries(STATUSES.map(s => [s.key, s]));
 export const STATUS_INDEX = Object.fromEntries(STATUSES.map((s, i) => [s.key, i]));
 
-export const COATINGS = ['ไม่เคลือบ', 'PVC ใส', 'PVC ด้าน', 'UV'];
+export const COATINGS = ['ไม่เคลือบ', 'PVC ใส 1 หน้า', 'PVC ใส 2 หน้า', 'PVC ด้าน 1 หน้า', 'PVC ด้าน 2 หน้า', 'UV', 'Spot UV'];
 export const COLORS_OPTIONS = ['1 สี', '2 สี', '4 สี (CMYK)', '4 สี + พิเศษ'];
 
 export const PRINT_SYSTEMS = ['Offset', 'Digital'];

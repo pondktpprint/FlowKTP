@@ -7,6 +7,21 @@ export default function Dashboard({ jobs, sales }) {
 
   const getSalesCount = (salesId) => activeJobs.filter(j => j.sales_id === salesId).length;
 
+  // Group jobs by date for "Daily Incoming Jobs"
+  const dailyIncoming = {};
+  jobs.forEach(j => {
+    const d = new Date(j.created_at || j.updated_at || Date.now());
+    const dateStr = d.toLocaleDateString('th-TH', { year: 'numeric', month: 'short', day: 'numeric' });
+    if (!dailyIncoming[dateStr]) dailyIncoming[dateStr] = [];
+    dailyIncoming[dateStr].push(j);
+  });
+
+  const sortedDates = Object.keys(dailyIncoming).sort((a, b) => {
+    const dateA = new Date(dailyIncoming[a][0].created_at || dailyIncoming[a][0].updated_at || Date.now());
+    const dateB = new Date(dailyIncoming[b][0].created_at || dailyIncoming[b][0].updated_at || Date.now());
+    return dateB - dateA;
+  });
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -73,6 +88,32 @@ export default function Dashboard({ jobs, sales }) {
           </div>
         </div>
 
+      </div>
+
+      {/* Daily Incoming Stats */}
+      <div style={{ background: 'var(--surface-card)', padding: '24px', borderRadius: '16px', boxShadow: 'var(--shadow-sm)' }}>
+        <h3 style={{ margin: '0 0 20px 0', fontSize: 18, color: 'var(--ink)' }}>📅 สถิติรับงานใหม่ (รายวัน)</h3>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          {sortedDates.slice(0, 14).map(dateStr => {
+            const dayJobs = dailyIncoming[dateStr];
+            return (
+              <div key={dateStr} style={{ border: '1px solid var(--rule)', borderRadius: '12px', padding: '16px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 12 }}>
+                  <span style={{ fontSize: 16, fontWeight: 700, color: 'var(--ink)' }}>{dateStr}</span>
+                  <span style={{ fontSize: 14, fontWeight: 700, color: '#3b82f6', background: 'rgba(59, 130, 246, 0.1)', padding: '4px 10px', borderRadius: '20px' }}>{dayJobs.length} งาน</span>
+                </div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                  {dayJobs.map(j => (
+                    <div key={j.id} style={{ fontSize: 13, background: 'var(--surface)', padding: '6px 12px', borderRadius: '8px', border: '1px solid var(--rule)', display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <span style={{ fontWeight: 700, color: 'var(--ink-soft)' }}>#{j.job_no}</span>
+                      <span style={{ color: 'var(--ink)', fontWeight: 500 }}>{j.company_name ? `🏢 ${j.company_name}` : j.name}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

@@ -2,10 +2,10 @@ import { useState, useEffect } from 'react';
 import { STATUSES, COATINGS, COLORS_OPTIONS, PRINT_SYSTEMS, TECHNIQUES, STATUS_MAP, apiFetch } from '../constants.js';
 import StatusBar from './StatusBar.jsx';
 
-export default function JobModal({ job, sales, isProduction, onClose, onSaved, onDeleted }) {
+export default function JobModal({ job, sales, companies = [], isProduction, onClose, onSaved, onDeleted }) {
   const isNew = !job?.id;
   const [form, setForm] = useState({
-    job_no: '', name: '', sales_id: '', due_date: '',
+    job_no: '', name: '', company_name: '', sales_id: '', due_date: '',
     print_system: '', print_color: '',
     paper: '', colors: '', coating: 'ไม่เคลือบ',
     special_techniques: [], foil_color: '', fold_type: '',
@@ -26,6 +26,7 @@ export default function JobModal({ job, sales, isProduction, onClose, onSaved, o
       setForm({
         job_no:   job.job_no   || '',
         name:     job.name     || '',
+        company_name: job.company_name || '',
         sales_id: job.sales_id || '',
         due_date: job.due_date ? job.due_date.slice(0,10) : '',
         print_system: job.print_system || '',
@@ -89,7 +90,13 @@ export default function JobModal({ job, sales, isProduction, onClose, onSaved, o
               <label>ชื่องาน *</label>
               <input className="input" value={form.name} onChange={e => set('name', e.target.value)} disabled={readOnly} placeholder="ชื่องาน"/>
             </div>
-
+            <div className="field">
+              <label>ชื่อบริษัท / ลูกค้า</label>
+              <input className="input" list="companyList" value={form.company_name} onChange={e => set('company_name', e.target.value)} disabled={readOnly} placeholder="พิมพ์หรือเลือก..." />
+              <datalist id="companyList">
+                {companies.map(c => <option key={c} value={c} />)}
+              </datalist>
+            </div>
             <div className="field">
               <label>เซลล์ *</label>
               <select className="input" value={form.sales_id} onChange={e => set('sales_id', e.target.value)} disabled={readOnly}>
