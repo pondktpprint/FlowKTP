@@ -58,39 +58,36 @@ export default function JobCard({ job, onClick, isProduction, onAction }) {
       onClick={onClick}
       style={{
         background: 'var(--surface-card)',
-        borderLeft: `6px solid ${job.sales_color}`,
-        border: attention ? '2px solid #ef4444' : '1px solid transparent',
-        borderRadius: '16px',
+        borderRadius: 'var(--radius-lg)',
         padding: '24px',
         cursor: 'pointer',
-        transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+        transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
         position: 'relative',
-        boxShadow: attention ? '0 0 15px rgba(239, 68, 68, 0.3)' : 'var(--shadow-sm)',
+        boxShadow: attention ? '0 0 0 2px #ef4444' : 'var(--shadow-sm)',
         display: 'flex',
         flexDirection: 'column',
         gap: '20px'
       }}
-      onMouseEnter={e => { e.currentTarget.style.boxShadow = 'var(--shadow-md)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-      onMouseLeave={e => { e.currentTarget.style.boxShadow = 'var(--shadow-sm)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+      onMouseEnter={e => { e.currentTarget.style.boxShadow = attention ? '0 0 0 2px #ef4444' : 'var(--shadow-md)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+      onMouseLeave={e => { e.currentTarget.style.boxShadow = attention ? '0 0 0 2px #ef4444' : 'var(--shadow-sm)'; e.currentTarget.style.transform = 'translateY(0)'; }}
     >
       {/* Top Section */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '4px' }}>
-            <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: lightColor, boxShadow: `0 0 8px ${lightShadow}` }} title={lightTitle}></div>
-            <span style={{ fontSize: '18px', fontWeight: 700, color: 'var(--ink-faint)' }}>{job.job_no}</span>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: lightColor, boxShadow: `0 0 12px ${lightShadow}` }} title={lightTitle}></div>
+            <span style={{ fontSize: '16px', fontWeight: 700, color: 'var(--ink-soft)', fontFamily: 'var(--font-heading)' }}>#{job.job_no}</span>
           </div>
-          <h3 style={{ margin: 0, fontSize: '24px', fontWeight: 800, color: 'var(--ink)' }}>{job.name}</h3>
+          <h3 style={{ margin: 0, fontSize: '24px', fontWeight: 700, color: 'var(--ink)', fontFamily: 'var(--font-heading)', letterSpacing: '-0.02em' }}>{job.name}</h3>
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8 }}>
           <span style={{
-            fontSize: 14, fontWeight: 700, padding: '8px 16px', borderRadius: 'var(--radius-pill)',
-            background: `linear-gradient(135deg, ${s?.color}, ${s?.color}dd)`, color: '#fff',
-            boxShadow: `0 4px 12px ${s?.color}40`, border: `1px solid ${s?.color}80`,
-            display: 'inline-flex', alignItems: 'center', gap: 8, letterSpacing: '0.02em'
+            fontSize: 13, fontWeight: 700, padding: '6px 14px', borderRadius: 'var(--radius-pill)',
+            background: `${s?.color}15`, color: s?.color,
+            display: 'inline-flex', alignItems: 'center', gap: 6, letterSpacing: '0.02em'
           }}>
-            <span style={{ fontSize: 18 }}>{s?.icon}</span>
+            <span style={{ fontSize: 16 }}>{s?.icon}</span>
             {s?.label}
           </span>
         </div>
@@ -120,31 +117,31 @@ export default function JobCard({ job, onClick, isProduction, onAction }) {
       )}
 
       {/* Bottom Section: Tags */}
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', alignItems: 'center' }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}>
         {job.print_system && (
-          <span className="tag" style={{ background: '#f8fafc', color: '#4338ca', fontWeight: 600, padding: '3px 8px', borderRadius: '12px', boxShadow: '0 1px 2px rgba(0,0,0,0.05)', fontSize: '11px' }}>🖨️ {job.print_system}</span>
+          <span className="tag" style={{ background: 'var(--surface)', color: 'var(--ink)', fontWeight: 600, padding: '4px 10px', borderRadius: '8px', fontSize: '12px' }}>🖨️ {job.print_system}</span>
         )}
         {job.print_color && (
-          <span className="tag" style={{ background: '#f8fafc', color: '#be185d', fontWeight: 600, padding: '3px 8px', borderRadius: '12px', boxShadow: '0 1px 2px rgba(0,0,0,0.05)', fontSize: '11px' }}>🎨 {job.print_color}</span>
+          <span className="tag" style={{ background: 'var(--surface)', color: 'var(--ink)', fontWeight: 600, padding: '4px 10px', borderRadius: '8px', fontSize: '12px' }}>🎨 {job.print_color}</span>
         )}
         {job.paper && (
-          <span className="tag" style={{ background: '#f8fafc', color: '#475569', fontWeight: 600, padding: '3px 8px', borderRadius: '12px', boxShadow: '0 1px 2px rgba(0,0,0,0.05)', fontSize: '11px' }}>📄 {job.paper}</span>
+          <span className="tag" style={{ background: 'var(--surface)', color: 'var(--ink)', fontWeight: 600, padding: '4px 10px', borderRadius: '8px', fontSize: '12px' }}>📄 {job.paper}</span>
         )}
         {job.colors && (
-          <span className="tag" style={{ background: '#fffbeb', color: '#b45309', fontWeight: 600, padding: '3px 8px', borderRadius: '12px', boxShadow: '0 1px 2px rgba(0,0,0,0.05)', fontSize: '11px' }}>{job.colors}</span>
+          <span className="tag" style={{ background: 'var(--surface)', color: 'var(--ink)', fontWeight: 600, padding: '4px 10px', borderRadius: '8px', fontSize: '12px' }}>{job.colors}</span>
         )}
         {job.coating && job.coating !== 'ไม่เคลือบ' && (
-          <span className="tag" style={{ background: '#f8fafc', color: '#2563eb', fontWeight: 600, padding: '3px 8px', borderRadius: '12px', boxShadow: '0 1px 2px rgba(0,0,0,0.05)', fontSize: '11px' }}>✨ {job.coating}</span>
+          <span className="tag" style={{ background: 'var(--surface)', color: 'var(--ink)', fontWeight: 600, padding: '4px 10px', borderRadius: '8px', fontSize: '12px' }}>✨ {job.coating}</span>
         )}
         {st.map(tech => (
-          <span key={tech} className="tag" style={{ background: '#f8fafc', color: '#7c3aed', fontWeight: 600, padding: '3px 8px', borderRadius: '12px', boxShadow: '0 1px 2px rgba(0,0,0,0.05)', fontSize: '11px' }}>
+          <span key={tech} className="tag" style={{ background: 'var(--surface)', color: 'var(--ink)', fontWeight: 600, padding: '4px 10px', borderRadius: '8px', fontSize: '12px' }}>
             ⭐ {tech}
             {tech === 'ปั๊มเคทอง' && job.foil_color ? ` (${job.foil_color})` : ''}
             {tech === 'พับ' && job.fold_type ? ` (${job.fold_type})` : ''}
           </span>
         ))}
         {due && (
-          <span className={`tag ${due.cls}`} style={{ background: '#f8fafc', fontWeight: 600, padding: '3px 8px', borderRadius: '12px', boxShadow: '0 1px 2px rgba(0,0,0,0.05)', fontSize: '11px' }}>📅 {due.label}</span>
+          <span className={`tag ${due.cls}`} style={{ fontWeight: 700, padding: '4px 10px', borderRadius: '8px', fontSize: '12px' }}>📅 {due.label}</span>
         )}
       </div>
 

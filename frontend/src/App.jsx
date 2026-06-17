@@ -128,33 +128,35 @@ export default function App() {
       <div className="layout-container">
         {/* Sidebar Desktop */}
       <aside className="sidebar-desktop">
-        <div style={{ padding: '24px 28px', borderBottom: '1px solid var(--rule)' }}>
-          <span style={{ fontFamily: 'var(--font)', fontWeight: 800, fontSize: 16, letterSpacing: '.02em', color: 'var(--accent)' }}>Kittiporn Printing Co.,Ltd</span>
+        <div style={{ padding: '32px 24px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+          <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: 20, letterSpacing: '.02em', color: '#fff', display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span style={{ color: 'var(--accent)' }}>✦</span> Printflow
+          </span>
         </div>
         
         <nav style={{ flex: 1, padding: '28px 20px', display: 'flex', flexDirection: 'column', gap: 8 }}>
           <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--ink-faint)', textTransform: 'uppercase', marginBottom: 8, paddingLeft: 8 }}>MENU</div>
-          <button className="btn btn-ghost" style={{ justifyContent: 'flex-start', background: currentView === 'jobs' ? 'rgba(255,255,255,0.05)' : 'transparent', color: 'var(--ink)', border: 'none' }} onClick={() => setCurrentView('jobs')}>🖨️ แดชบอร์ดงานพิมพ์</button>
+          <button className="btn btn-ghost" style={{ justifyContent: 'flex-start', background: currentView === 'jobs' ? '#fff' : 'transparent', color: currentView === 'jobs' ? '#000' : 'var(--ink-faint)', border: 'none', borderRadius: 'var(--radius-pill)', fontWeight: currentView === 'jobs' ? 700 : 500 }} onClick={() => setCurrentView('jobs')}>🖨️ แดชบอร์ดงานพิมพ์</button>
           
           {isProduction && (
-            <button className="btn btn-ghost" style={{ justifyContent: 'flex-start', background: currentView === 'stats' ? 'rgba(255,255,255,0.05)' : 'transparent', color: 'var(--ink)', border: 'none' }} onClick={() => setCurrentView('stats')}>📊 สถิติภาพรวม</button>
+            <button className="btn btn-ghost" style={{ justifyContent: 'flex-start', background: currentView === 'stats' ? '#fff' : 'transparent', color: currentView === 'stats' ? '#000' : 'var(--ink-faint)', border: 'none', borderRadius: 'var(--radius-pill)', fontWeight: currentView === 'stats' ? 700 : 500 }} onClick={() => setCurrentView('stats')}>📊 สถิติภาพรวม</button>
           )}
         </nav>
 
-        <div style={{ padding: 24, borderTop: '1px solid var(--rule)' }}>
+        <div style={{ padding: 24, borderTop: '1px solid rgba(255,255,255,0.05)' }}>
           {isProduction ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                 <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'var(--accent)', color: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: 16 }}>P</div>
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  <span style={{ fontSize: 14, fontWeight: 600 }}>Pond</span>
-                  <span style={{ fontSize: 12, color: 'var(--ink-soft)' }}>Production</span>
+                  <span style={{ fontSize: 14, fontWeight: 600, color: '#fff' }}>Pond</span>
+                  <span style={{ fontSize: 12, color: 'var(--ink-faint)' }}>Production</span>
                 </div>
               </div>
-              <button className="btn btn-ghost btn-sm" onClick={handleLogout} style={{ width: '100%', borderColor: 'rgba(255,255,255,0.1)' }}>ออกจากระบบ</button>
+              <button className="btn btn-ghost btn-sm" onClick={handleLogout} style={{ width: '100%', borderColor: 'rgba(255,255,255,0.1)', color: '#fff' }}>ออกจากระบบ</button>
             </div>
           ) : (
-            <button className="btn btn-dark" style={{ width: '100%' }} onClick={() => setLoginOpen(true)}>🔐 ฝ่ายผลิตล็อคอิน</button>
+            <button className="btn" style={{ width: '100%', background: 'var(--accent)', color: '#000', borderRadius: 'var(--radius-pill)', fontWeight: 700, border: 'none' }} onClick={() => setLoginOpen(true)}>🔐 ฝ่ายผลิตล็อคอิน</button>
           )}
         </div>
       </aside>
@@ -163,19 +165,27 @@ export default function App() {
       <main className="main-content">
         <div style={{ maxWidth: 1200, margin: '0 auto', width: '100%' }}>
           
-          {/* Greeting Banner */}
-          <div className="greeting-banner" style={{
-            background: 'linear-gradient(135deg, #f59e0b 0%, #10b981 100%)',
-            borderRadius: 'var(--radius-lg)',
-            padding: '32px 40px',
-            color: '#fff',
-            marginBottom: 32,
-            boxShadow: 'var(--shadow-md)',
-            position: 'relative', overflow: 'hidden'
+          {/* Header */}
+          <div style={{
+            display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: 20,
+            marginBottom: 32
           }}>
-            <h1 style={{ fontSize: 28, fontWeight: 700, marginBottom: 8, color: '#fff' }}>👋 สวัสดี {isProduction ? 'Pond' : 'ทีมเซลล์'},</h1>
-            <p style={{ opacity: 0.9, maxWidth: 500, lineHeight: 1.6, marginBottom: 24 }}>ติดตามสถานะงานพิมพ์และจัดการคิวงานทั้งหมดของคุณได้ที่นี่</p>
-            {isProduction && <button className="btn" style={{ background: '#fff', color: '#000', fontWeight: 600, border: 'none' }} onClick={() => setSelected('new')}>+ เพิ่มงานใหม่</button>}
+            <div>
+              <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: 42, fontWeight: 700, margin: '0 0 4px 0', color: 'var(--ink)', letterSpacing: '-0.02em' }}>
+                {currentView === 'jobs' ? 'Printflow Overview' : 'Dashboard'}
+              </h1>
+              <p style={{ color: 'var(--ink-soft)', margin: 0, fontSize: 15, fontWeight: 500 }}>
+                {isProduction ? 'จัดการคิวงานฝ่ายผลิตและตรวจสอบงานด่วนได้ที่นี่' : 'ติดตามสถานะงานของคุณและส่งงานเข้าฝ่ายผลิต'}
+              </p>
+            </div>
+            <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+              <div style={{ position: 'relative' }}>
+                <span style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: 'var(--ink-faint)', pointerEvents: 'none' }}>🔍</span>
+                <input className="input" style={{ paddingLeft: 38, width: 240, borderRadius: 'var(--radius-pill)', border: 'none', boxShadow: 'var(--shadow-sm)' }} placeholder="Search..." value={search} onChange={e => setSearch(e.target.value)}/>
+              </div>
+              {isProduction && <button className="btn" style={{ background: '#fff', color: '#000', fontWeight: 600, border: 'none', borderRadius: '50%', width: 44, height: 44, boxShadow: 'var(--shadow-sm)' }}>🔔</button>}
+              <button className="btn" style={{ background: 'var(--ink)', color: '#fff', fontWeight: 600, border: 'none', borderRadius: 'var(--radius-pill)', padding: '10px 24px', boxShadow: 'var(--shadow-md)' }} onClick={() => setSelected('new')}>+ เพิ่มงานใหม่</button>
+            </div>
           </div>
 
           {currentView === 'stats' && isProduction ? (
@@ -260,18 +270,15 @@ export default function App() {
             ))}
           </div>
 
-          {/* Search + status filter */}
-          <div style={{ display: 'flex', gap: 12, marginBottom: 24, flexWrap: 'wrap' }}>
-            <div style={{ flex: 1, minWidth: 220, position: 'relative' }}>
-              <span style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: 'var(--ink-faint)', pointerEvents: 'none' }}>🔍</span>
-              <input className="input" style={{ paddingLeft: 38, height: '100%', background: 'var(--surface-card)' }} placeholder="ค้นหา Job, ชื่องาน..." value={search} onChange={e => setSearch(e.target.value)}/>
-            </div>
-            <select className="input" style={{ width: 180, background: 'var(--surface-card)' }} value={filterStatus} onChange={e => setFStatus(e.target.value)}>
+          {/* Status filter */}
+          <div style={{ display: 'flex', gap: 12, marginBottom: 24, flexWrap: 'wrap', alignItems: 'center' }}>
+            <h3 style={{ fontSize: 16, fontWeight: 700, marginRight: 8 }}>Filter:</h3>
+            <select className="input" style={{ width: 180, background: 'var(--surface-card)', borderRadius: 'var(--radius-pill)', border: 'none', boxShadow: 'var(--shadow-sm)' }} value={filterStatus} onChange={e => setFStatus(e.target.value)}>
               <option value="">ทุกสถานะ</option>
               <option value="attention">⚠️ งานที่ต้องรับทราบ</option>
               {STATUSES.map(s => <option key={s.key} value={s.key}>{s.icon} {s.label}</option>)}
             </select>
-            <button className="btn btn-ghost" style={{ padding: '0 16px', background: 'var(--surface-card)' }} onClick={fetchAll} title="รีเฟรช">🔄</button>
+            <button className="btn btn-ghost" style={{ padding: '0 16px', background: 'var(--surface-card)', borderRadius: 'var(--radius-pill)', border: 'none', boxShadow: 'var(--shadow-sm)' }} onClick={fetchAll} title="รีเฟรช">🔄</button>
           </div>
 
           {/* Job list */}

@@ -31,29 +31,29 @@ export default function Dashboard({ jobs, sales }) {
 
       {/* Top Metric Cards */}
       <div className="grid-2" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px' }}>
-        <MetricCard title="งานที่กำลังผลิต" value={activeJobs.length} icon="🖨️" color="#3b82f6" />
-        <MetricCard title="งานด่วน / ต้องดู" value={rushJobs.length} icon="🔥" color="#ef4444" />
-        <MetricCard title="ผลิตเสร็จแล้ว" value={doneJobs.length} icon="✅" color="#10b981" />
+        <MetricCard title="งานกำลังผลิต" value={activeJobs.length} icon="🖨️" accent="var(--accent)" />
+        <MetricCard title="งานด่วน / ต้องดู" value={rushJobs.length} icon="🔥" accent="#ef4444" />
+        <MetricCard title="ผลิตเสร็จแล้ว" value={doneJobs.length} icon="✅" accent="var(--accent-purple)" />
       </div>
 
       {/* Charts Section */}
       <div className="grid-2" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
         
         {/* Sales Chart */}
-        <div style={{ background: 'var(--surface-card)', padding: '24px', borderRadius: '16px', boxShadow: 'var(--shadow-sm)' }}>
-          <h3 style={{ margin: '0 0 20px 0', fontSize: 16, color: 'var(--ink)' }}>📈 ออเดอร์รายเซลล์ (เฉพาะงานกำลังทำ)</h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <div style={{ background: 'var(--surface-card)', padding: '32px', borderRadius: 'var(--radius-xl)', boxShadow: 'var(--shadow-md)' }}>
+          <h3 style={{ margin: '0 0 24px 0', fontSize: 18, color: 'var(--ink)', fontFamily: 'var(--font-heading)' }}>📈 ออเดอร์รายเซลล์</h3>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
             {sales.map(s => {
               const count = getSalesCount(s.id);
               const max = Math.max(...sales.map(sx => getSalesCount(sx.id))) || 1;
               const pct = (count / max) * 100;
               return (
                 <div key={s.id} style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                  <span style={{ width: 80, fontSize: 14, fontWeight: 600, color: 'var(--ink-soft)' }}>{s.name}</span>
-                  <div style={{ flex: 1, background: 'var(--surface)', height: 16, borderRadius: 8, overflow: 'hidden', position: 'relative' }}>
-                    <div style={{ width: `${pct}%`, height: '100%', background: `linear-gradient(90deg, ${s.color}dd, ${s.color})`, borderRadius: 8, transition: 'width 0.8s cubic-bezier(0.16, 1, 0.3, 1)' }}></div>
+                  <span style={{ width: 80, fontSize: 14, fontWeight: 700, color: 'var(--ink)' }}>{s.name}</span>
+                  <div style={{ flex: 1, background: 'var(--surface)', height: 12, borderRadius: 12, overflow: 'hidden', position: 'relative' }}>
+                    <div style={{ width: `${pct}%`, height: '100%', background: 'var(--accent)', borderRadius: 12, transition: 'width 0.8s cubic-bezier(0.16, 1, 0.3, 1)' }}></div>
                   </div>
-                  <span style={{ width: 30, fontSize: 14, fontWeight: 800, textAlign: 'right', color: 'var(--ink)' }}>{count}</span>
+                  <span style={{ width: 30, fontSize: 15, fontWeight: 800, textAlign: 'right', color: 'var(--ink)' }}>{count}</span>
                 </div>
               );
             })}
@@ -61,9 +61,9 @@ export default function Dashboard({ jobs, sales }) {
         </div>
 
         {/* Print System Chart */}
-        <div style={{ background: 'var(--surface-card)', padding: '24px', borderRadius: '16px', boxShadow: 'var(--shadow-sm)' }}>
-          <h3 style={{ margin: '0 0 20px 0', fontSize: 16, color: 'var(--ink)' }}>🏭 สัดส่วนระบบพิมพ์ (เฉพาะงานกำลังทำ)</h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <div style={{ background: 'var(--surface-card)', padding: '32px', borderRadius: 'var(--radius-xl)', boxShadow: 'var(--shadow-md)' }}>
+          <h3 style={{ margin: '0 0 24px 0', fontSize: 18, color: 'var(--ink)', fontFamily: 'var(--font-heading)' }}>🏭 สัดส่วนระบบพิมพ์</h3>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
             {['Offset', 'Digital', 'ไม่ได้ระบุ'].map(sys => {
               const count = sys === 'ไม่ได้ระบุ' 
                 ? activeJobs.filter(j => !j.print_system).length
@@ -71,17 +71,17 @@ export default function Dashboard({ jobs, sales }) {
               
               const total = activeJobs.length || 1;
               const pct = (count / total) * 100;
-              const color = sys === 'Offset' ? '#8b5cf6' : sys === 'Digital' ? '#ec4899' : '#64748b';
+              const color = sys === 'Offset' ? 'var(--accent-purple)' : sys === 'Digital' ? '#f472b6' : 'var(--ink-faint)';
               
               if (count === 0 && sys === 'ไม่ได้ระบุ') return null;
 
               return (
                 <div key={sys} style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                  <span style={{ width: 80, fontSize: 14, fontWeight: 600, color: 'var(--ink-soft)' }}>{sys}</span>
-                  <div style={{ flex: 1, background: 'var(--surface)', height: 16, borderRadius: 8, overflow: 'hidden' }}>
-                    <div style={{ width: `${pct}%`, height: '100%', background: `linear-gradient(90deg, ${color}dd, ${color})`, borderRadius: 8, transition: 'width 0.8s cubic-bezier(0.16, 1, 0.3, 1)' }}></div>
+                  <span style={{ width: 80, fontSize: 14, fontWeight: 700, color: 'var(--ink)' }}>{sys}</span>
+                  <div style={{ flex: 1, background: 'var(--surface)', height: 12, borderRadius: 12, overflow: 'hidden' }}>
+                    <div style={{ width: `${pct}%`, height: '100%', background: color, borderRadius: 12, transition: 'width 0.8s cubic-bezier(0.16, 1, 0.3, 1)' }}></div>
                   </div>
-                  <span style={{ width: 30, fontSize: 14, fontWeight: 800, textAlign: 'right', color: 'var(--ink)' }}>{count}</span>
+                  <span style={{ width: 30, fontSize: 15, fontWeight: 800, textAlign: 'right', color: 'var(--ink)' }}>{count}</span>
                 </div>
               );
             })}
@@ -91,22 +91,22 @@ export default function Dashboard({ jobs, sales }) {
       </div>
 
       {/* Daily Incoming Stats */}
-      <div style={{ background: 'var(--surface-card)', padding: '24px', borderRadius: '16px', boxShadow: 'var(--shadow-sm)' }}>
-        <h3 style={{ margin: '0 0 20px 0', fontSize: 18, color: 'var(--ink)' }}>📅 สถิติรับงานใหม่ (รายวัน)</h3>
+      <div style={{ background: 'var(--surface-card)', padding: '32px', borderRadius: 'var(--radius-xl)', boxShadow: 'var(--shadow-md)' }}>
+        <h3 style={{ margin: '0 0 24px 0', fontSize: 18, color: 'var(--ink)', fontFamily: 'var(--font-heading)' }}>📅 สถิติรับงานใหม่ (รายวัน)</h3>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           {sortedDates.slice(0, 14).map(dateStr => {
             const dayJobs = dailyIncoming[dateStr];
             return (
-              <div key={dateStr} style={{ border: '1px solid var(--rule)', borderRadius: '12px', padding: '16px' }}>
+              <div key={dateStr} style={{ background: 'var(--surface)', borderRadius: '16px', padding: '20px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 12 }}>
                   <span style={{ fontSize: 16, fontWeight: 700, color: 'var(--ink)' }}>{dateStr}</span>
-                  <span style={{ fontSize: 14, fontWeight: 700, color: '#3b82f6', background: 'rgba(59, 130, 246, 0.1)', padding: '4px 10px', borderRadius: '20px' }}>{dayJobs.length} งาน</span>
+                  <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--ink)', background: 'var(--accent)', padding: '4px 12px', borderRadius: 'var(--radius-pill)' }}>{dayJobs.length} งาน</span>
                 </div>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                   {dayJobs.map(j => (
-                    <div key={j.id} style={{ fontSize: 13, background: 'var(--surface)', padding: '6px 12px', borderRadius: '8px', border: '1px solid var(--rule)', display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <span style={{ fontWeight: 700, color: 'var(--ink-soft)' }}>#{j.job_no}</span>
-                      <span style={{ color: 'var(--ink)', fontWeight: 500 }}>{j.company_name ? `🏢 ${j.company_name}` : j.name}</span>
+                    <div key={j.id} style={{ fontSize: 13, background: '#fff', padding: '8px 14px', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: 8, boxShadow: 'var(--shadow-sm)' }}>
+                      <span style={{ fontWeight: 800, color: 'var(--ink)' }}>#{j.job_no}</span>
+                      <span style={{ color: 'var(--ink-soft)', fontWeight: 600 }}>{j.company_name ? j.company_name : j.name}</span>
                     </div>
                   ))}
                 </div>
@@ -119,23 +119,28 @@ export default function Dashboard({ jobs, sales }) {
   );
 }
 
-function MetricCard({ title, value, icon, color }) {
+function MetricCard({ title, value, icon, accent }) {
   return (
     <div style={{
       background: 'var(--surface-card)',
-      padding: '24px',
-      borderRadius: '16px',
-      boxShadow: 'var(--shadow-sm)',
-      display: 'flex', alignItems: 'center', gap: '20px',
-      borderLeft: `6px solid ${color}`
+      padding: '32px 24px',
+      borderRadius: 'var(--radius-xl)',
+      boxShadow: 'var(--shadow-md)',
+      display: 'flex', flexDirection: 'column', alignItems: 'flex-start',
+      position: 'relative', overflow: 'hidden'
     }}>
-      <div style={{ width: 64, height: 64, borderRadius: '16px', background: `${color}15`, color, fontSize: 32, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-        {icon}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16, zIndex: 1 }}>
+        <div style={{ width: 32, height: 32, borderRadius: '10px', background: 'var(--surface)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16 }}>
+          {icon}
+        </div>
+        <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--ink)' }}>{title}</span>
       </div>
-      <div>
-        <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--ink-soft)', marginBottom: 4 }}>{title}</div>
-        <div style={{ fontSize: 40, fontWeight: 800, color: 'var(--ink)', lineHeight: 1 }}>{value}</div>
+      
+      <div style={{ fontSize: 56, fontWeight: 800, color: 'var(--ink)', lineHeight: 1, fontFamily: 'var(--font-heading)', letterSpacing: '-0.03em', zIndex: 1 }}>
+        {value}
       </div>
+      
+      <div style={{ position: 'absolute', right: -20, bottom: -20, width: 120, height: 120, background: accent, opacity: 0.15, borderRadius: '50%', filter: 'blur(30px)' }}></div>
     </div>
   );
 }
