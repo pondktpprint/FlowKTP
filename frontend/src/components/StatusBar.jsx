@@ -1,4 +1,4 @@
-import { STATUSES, STATUS_INDEX } from '../constants.js';
+import { STATUSES, STATUS_INDEX } from '../constants.jsx';
 
 export default function StatusBar({ status, onChange }) {
   const current = STATUS_INDEX[status] ?? 0;

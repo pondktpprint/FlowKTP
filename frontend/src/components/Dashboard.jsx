@@ -1,4 +1,6 @@
 import React from 'react';
+import { STATUS_MAP } from '../constants.jsx';
+import { BarChart2, Printer, Flame, CheckCircle, TrendingUp, Factory, Calendar } from 'lucide-react';
 
 export default function Dashboard({ jobs, sales }) {
   const activeJobs = jobs.filter(j => j.status !== 'done');
@@ -25,15 +27,17 @@ export default function Dashboard({ jobs, sales }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <h2 style={{ fontSize: 24, fontWeight: 800 }}>📊 สถิติภาพรวมโรงพิมพ์</h2>
+        <h2 style={{ fontSize: 24, fontWeight: 800, display: 'flex', alignItems: 'center', gap: 10 }}>
+          <BarChart2 size={28} /> สถิติภาพรวมโรงพิมพ์
+        </h2>
         <span style={{ fontSize: 13, color: 'var(--ink-soft)', background: 'var(--surface-card)', padding: '6px 12px', borderRadius: '20px' }}>อัปเดตล่าสุด: {new Date().toLocaleTimeString('th-TH')}</span>
       </div>
 
       {/* Top Metric Cards */}
       <div className="grid-2" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px' }}>
-        <MetricCard title="งานกำลังผลิต" value={activeJobs.length} icon="🖨️" accent="var(--accent)" />
-        <MetricCard title="งานด่วน / ต้องดู" value={rushJobs.length} icon="🔥" accent="#ef4444" />
-        <MetricCard title="ผลิตเสร็จแล้ว" value={doneJobs.length} icon="✅" accent="var(--accent-purple)" />
+        <MetricCard title="งานกำลังผลิต" value={activeJobs.length} icon={<Printer size={18} />} accent="var(--accent)" />
+        <MetricCard title="งานด่วน / ต้องดู" value={rushJobs.length} icon={<Flame size={18} color="#ef4444" />} accent="#ef4444" />
+        <MetricCard title="ผลิตเสร็จแล้ว" value={doneJobs.length} icon={<CheckCircle size={18} color="var(--accent-purple)" />} accent="var(--accent-purple)" />
       </div>
 
       {/* Charts Section */}
@@ -41,7 +45,9 @@ export default function Dashboard({ jobs, sales }) {
         
         {/* Sales Chart */}
         <div style={{ background: 'var(--surface-card)', padding: '32px', borderRadius: 'var(--radius-xl)', boxShadow: 'var(--shadow-md)' }}>
-          <h3 style={{ margin: '0 0 24px 0', fontSize: 18, color: 'var(--ink)', fontFamily: 'var(--font-heading)' }}>📈 ออเดอร์รายเซลล์</h3>
+          <h3 style={{ margin: '0 0 24px 0', fontSize: 18, color: 'var(--ink)', fontFamily: 'var(--font-heading)', display: 'flex', alignItems: 'center', gap: 8 }}>
+            <TrendingUp size={20} /> ออเดอร์รายเซลล์
+          </h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
             {sales.map(s => {
               const count = getSalesCount(s.id);
@@ -62,7 +68,9 @@ export default function Dashboard({ jobs, sales }) {
 
         {/* Print System Chart */}
         <div style={{ background: 'var(--surface-card)', padding: '32px', borderRadius: 'var(--radius-xl)', boxShadow: 'var(--shadow-md)' }}>
-          <h3 style={{ margin: '0 0 24px 0', fontSize: 18, color: 'var(--ink)', fontFamily: 'var(--font-heading)' }}>🏭 สัดส่วนระบบพิมพ์</h3>
+          <h3 style={{ margin: '0 0 24px 0', fontSize: 18, color: 'var(--ink)', fontFamily: 'var(--font-heading)', display: 'flex', alignItems: 'center', gap: 8 }}>
+            <Factory size={20} /> สัดส่วนระบบพิมพ์
+          </h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
             {['Offset', 'Digital', 'ไม่ได้ระบุ'].map(sys => {
               const count = sys === 'ไม่ได้ระบุ' 
@@ -92,7 +100,9 @@ export default function Dashboard({ jobs, sales }) {
 
       {/* Daily Incoming Stats */}
       <div style={{ background: 'var(--surface-card)', padding: '32px', borderRadius: 'var(--radius-xl)', boxShadow: 'var(--shadow-md)' }}>
-        <h3 style={{ margin: '0 0 24px 0', fontSize: 18, color: 'var(--ink)', fontFamily: 'var(--font-heading)' }}>📅 สถิติรับงานใหม่ (รายวัน)</h3>
+        <h3 style={{ margin: '0 0 24px 0', fontSize: 18, color: 'var(--ink)', fontFamily: 'var(--font-heading)', display: 'flex', alignItems: 'center', gap: 8 }}>
+          <Calendar size={20} /> สถิติรับงานใหม่ (รายวัน)
+        </h3>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           {sortedDates.slice(0, 14).map(dateStr => {
             const dayJobs = dailyIncoming[dateStr];

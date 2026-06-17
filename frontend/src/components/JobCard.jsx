@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { STATUS_MAP, dueInfo, apiFetch } from '../constants.js';
+import { STATUS_MAP, dueInfo, apiFetch } from '../constants.jsx';
+import { Flame, AlertTriangle, MessageSquare, Printer, Palette, FileText, Sparkles, Star, Calendar, CheckCircle, Check, Send } from 'lucide-react';
 
 export default function JobCard({ job, onClick, isProduction, onAction }) {
   const [comment, setComment] = useState('');
@@ -102,46 +103,47 @@ export default function JobCard({ job, onClick, isProduction, onAction }) {
           <div style={{
             background: '#ef4444', color: '#fff', fontSize: 12, fontWeight: 700,
             padding: '4px 10px', borderRadius: 'var(--radius-pill)',
-            animation: 'pulse-red 2s infinite'
+            animation: 'pulse-red 2s infinite', display: 'flex', alignItems: 'center', gap: 4
           }}>
-            {isRush ? '🔥 งานด่วน!' : '⚠️ มีข้อความใหม่'}
+            {isRush ? <><Flame size={14} /> งานด่วน!</> : <><AlertTriangle size={14} /> มีข้อความใหม่</>}
           </div>
         )}
       </div>
 
       {/* Note Section (If any) */}
       {job.note && (
-        <div style={{ background: 'rgba(255,255,255,0.05)', padding: '10px 14px', borderRadius: '8px', fontSize: '13px', color: 'var(--ink-soft)' }}>
-          📝 <b>หมายเหตุ:</b> {job.note}
+        <div style={{ background: 'rgba(255,255,255,0.05)', padding: '10px 14px', borderRadius: '8px', fontSize: '13px', color: 'var(--ink-soft)', display: 'flex', gap: 6, alignItems: 'flex-start' }}>
+          <MessageSquare size={16} style={{ flexShrink: 0, marginTop: 2 }} /> 
+          <div><b>หมายเหตุ:</b> {job.note}</div>
         </div>
       )}
 
       {/* Bottom Section: Tags */}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}>
         {job.print_system && (
-          <span className="tag" style={{ background: 'var(--surface)', color: 'var(--ink)', fontWeight: 600, padding: '4px 10px', borderRadius: '8px', fontSize: '12px' }}>🖨️ {job.print_system}</span>
+          <span className="tag" style={{ background: 'var(--surface)', color: 'var(--ink)', fontWeight: 600, padding: '4px 10px', borderRadius: '8px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: 4 }}><Printer size={12} /> {job.print_system}</span>
         )}
         {job.print_color && (
-          <span className="tag" style={{ background: 'var(--surface)', color: 'var(--ink)', fontWeight: 600, padding: '4px 10px', borderRadius: '8px', fontSize: '12px' }}>🎨 {job.print_color}</span>
+          <span className="tag" style={{ background: 'var(--surface)', color: 'var(--ink)', fontWeight: 600, padding: '4px 10px', borderRadius: '8px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: 4 }}><Palette size={12} /> {job.print_color}</span>
         )}
         {job.paper && (
-          <span className="tag" style={{ background: 'var(--surface)', color: 'var(--ink)', fontWeight: 600, padding: '4px 10px', borderRadius: '8px', fontSize: '12px' }}>📄 {job.paper}</span>
+          <span className="tag" style={{ background: 'var(--surface)', color: 'var(--ink)', fontWeight: 600, padding: '4px 10px', borderRadius: '8px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: 4 }}><FileText size={12} /> {job.paper}</span>
         )}
         {job.colors && (
           <span className="tag" style={{ background: 'var(--surface)', color: 'var(--ink)', fontWeight: 600, padding: '4px 10px', borderRadius: '8px', fontSize: '12px' }}>{job.colors}</span>
         )}
         {job.coating && job.coating !== 'ไม่เคลือบ' && (
-          <span className="tag" style={{ background: 'var(--surface)', color: 'var(--ink)', fontWeight: 600, padding: '4px 10px', borderRadius: '8px', fontSize: '12px' }}>✨ {job.coating}</span>
+          <span className="tag" style={{ background: 'var(--surface)', color: 'var(--ink)', fontWeight: 600, padding: '4px 10px', borderRadius: '8px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: 4 }}><Sparkles size={12} /> {job.coating}</span>
         )}
         {st.map(tech => (
-          <span key={tech} className="tag" style={{ background: 'var(--surface)', color: 'var(--ink)', fontWeight: 600, padding: '4px 10px', borderRadius: '8px', fontSize: '12px' }}>
-            ⭐ {tech}
+          <span key={tech} className="tag" style={{ background: 'var(--surface)', color: 'var(--ink)', fontWeight: 600, padding: '4px 10px', borderRadius: '8px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: 4 }}>
+            <Star size={12} /> {tech}
             {tech === 'ปั๊มเคทอง' && job.foil_color ? ` (${job.foil_color})` : ''}
             {tech === 'พับ' && job.fold_type ? ` (${job.fold_type})` : ''}
           </span>
         ))}
         {due && (
-          <span className={`tag ${due.cls}`} style={{ fontWeight: 700, padding: '4px 10px', borderRadius: '8px', fontSize: '12px' }}>📅 {due.label}</span>
+          <span className={`tag ${due.cls}`} style={{ fontWeight: 700, padding: '4px 10px', borderRadius: '8px', fontSize: '12px', display: 'flex', alignItems: 'center', gap: 4 }}><Calendar size={12} /> {due.label}</span>
         )}
       </div>
 
@@ -163,7 +165,7 @@ export default function JobCard({ job, onClick, isProduction, onAction }) {
                 }}
                 disabled={loading}
               >
-                ✅ คอนเฟิร์มแบบ
+                <CheckCircle size={16} /> คอนเฟิร์มแบบ
               </button>
             )}
             <input 
@@ -175,8 +177,12 @@ export default function JobCard({ job, onClick, isProduction, onAction }) {
               onKeyDown={e => e.key === 'Enter' && handleComment(e)}
               disabled={loading}
             />
-            <button className="btn btn-dark" style={{ height: '36px', padding: '0 12px', flexShrink: 0 }} onClick={handleComment} disabled={loading || !comment}>ส่ง</button>
-            <button className="btn btn-danger" style={{ height: '36px', padding: '0 12px', background: '#ef4444', color: '#fff', flexShrink: 0 }} onClick={e => handleComment(e, true)} disabled={loading}>🔥 เร่งด่วน</button>
+            <button className="btn btn-dark" style={{ height: '36px', padding: '0 12px', flexShrink: 0 }} onClick={handleComment} disabled={loading || !comment}>
+              <Send size={14} /> ส่ง
+            </button>
+            <button className="btn btn-danger" style={{ height: '36px', padding: '0 12px', background: '#ef4444', color: '#fff', flexShrink: 0 }} onClick={e => handleComment(e, true)} disabled={loading}>
+              <Flame size={14} /> เร่งด่วน
+            </button>
           </>
         ) : (
           <div style={{ display: 'flex', width: '100%', gap: '8px' }}>
@@ -189,9 +195,13 @@ export default function JobCard({ job, onClick, isProduction, onAction }) {
               onKeyDown={e => e.key === 'Enter' && handleComment(e)}
               disabled={loading}
             />
-            <button className="btn btn-dark" style={{ height: '36px', padding: '0 12px' }} onClick={handleComment} disabled={loading || !comment}>ส่ง</button>
+            <button className="btn btn-dark" style={{ height: '36px', padding: '0 12px' }} onClick={handleComment} disabled={loading || !comment}>
+              <Send size={14} /> ส่ง
+            </button>
             {attention && (
-              <button className="btn" style={{ height: '36px', padding: '0 16px', background: '#10b981', color: '#fff', fontWeight: 600, border: 'none' }} onClick={handleAck} disabled={loading}>✅ รับทราบ</button>
+              <button className="btn" style={{ height: '36px', padding: '0 16px', background: '#10b981', color: '#fff', fontWeight: 600, border: 'none' }} onClick={handleAck} disabled={loading}>
+                <Check size={16} /> รับทราบ
+              </button>
             )}
           </div>
         )}

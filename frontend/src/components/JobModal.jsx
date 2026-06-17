@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { STATUSES, COATINGS, COLORS_OPTIONS, PRINT_SYSTEMS, TECHNIQUES, STATUS_MAP, apiFetch } from '../constants.js';
+import { STATUSES, COATINGS, COLORS_OPTIONS, PRINT_SYSTEMS, TECHNIQUES, STATUS_MAP, apiFetch } from '../constants.jsx';
 import StatusBar from './StatusBar.jsx';
 
 export default function JobModal({ job, sales, companies = [], isProduction, onClose, onSaved, onDeleted }) {

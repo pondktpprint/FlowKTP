@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
-import { STATUSES, apiFetch } from './constants.js';
+import { STATUSES, apiFetch } from './constants.jsx';
+import { Printer, BarChart2, Bell, Search, Plus, LogOut, Lock, RefreshCw, Sparkles, Box, CheckCircle, Trash2, ChevronLeft, ChevronRight } from 'lucide-react';
 import JobCard from './components/JobCard.jsx';
 import JobModal from './components/JobModal.jsx';
 import Dashboard from './components/Dashboard.jsx';
@@ -75,7 +76,7 @@ export default function App() {
       localStorage.setItem('pf_token', d.token);
       setIsProd(true); setLoginOpen(false);
       setLoginForm({ username: '', password: '' });
-      showToast('✅ เข้าสู่ระบบแล้ว');
+      showToast('เข้าสู่ระบบแล้ว');
     } else {
       const e = await res.json();
       setLoginErr(e.error);
@@ -133,16 +134,20 @@ export default function App() {
       <aside className="sidebar-desktop">
         <div style={{ padding: '32px 24px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
           <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: 20, letterSpacing: '.02em', color: '#fff', display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ color: 'var(--accent)' }}>✦</span> Printflow
+            <Sparkles size={20} color="var(--accent)" /> Printflow
           </span>
         </div>
         
         <nav style={{ flex: 1, padding: '28px 20px', display: 'flex', flexDirection: 'column', gap: 8 }}>
           <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--ink-faint)', textTransform: 'uppercase', marginBottom: 8, paddingLeft: 8 }}>MENU</div>
-          <button className="btn btn-ghost" style={{ justifyContent: 'flex-start', background: currentView === 'jobs' ? '#fff' : 'transparent', color: currentView === 'jobs' ? '#000' : 'var(--ink-faint)', border: 'none', borderRadius: 'var(--radius-pill)', fontWeight: currentView === 'jobs' ? 700 : 500 }} onClick={() => setCurrentView('jobs')}>🖨️ แดชบอร์ดงานพิมพ์</button>
+          <button className="btn btn-ghost" style={{ justifyContent: 'flex-start', background: currentView === 'jobs' ? '#fff' : 'transparent', color: currentView === 'jobs' ? '#000' : 'var(--ink-faint)', border: 'none', borderRadius: 'var(--radius-pill)', fontWeight: currentView === 'jobs' ? 700 : 500 }} onClick={() => setCurrentView('jobs')}>
+            <Printer size={18} /> แดชบอร์ดงานพิมพ์
+          </button>
           
           {isProduction && (
-            <button className="btn btn-ghost" style={{ justifyContent: 'flex-start', background: currentView === 'stats' ? '#fff' : 'transparent', color: currentView === 'stats' ? '#000' : 'var(--ink-faint)', border: 'none', borderRadius: 'var(--radius-pill)', fontWeight: currentView === 'stats' ? 700 : 500 }} onClick={() => setCurrentView('stats')}>📊 สถิติภาพรวม</button>
+            <button className="btn btn-ghost" style={{ justifyContent: 'flex-start', background: currentView === 'stats' ? '#fff' : 'transparent', color: currentView === 'stats' ? '#000' : 'var(--ink-faint)', border: 'none', borderRadius: 'var(--radius-pill)', fontWeight: currentView === 'stats' ? 700 : 500 }} onClick={() => setCurrentView('stats')}>
+              <BarChart2 size={18} /> สถิติภาพรวม
+            </button>
           )}
         </nav>
 
@@ -159,7 +164,9 @@ export default function App() {
               <button className="btn btn-ghost btn-sm" onClick={handleLogout} style={{ width: '100%', borderColor: 'rgba(255,255,255,0.1)', color: '#fff' }}>ออกจากระบบ</button>
             </div>
           ) : (
-            <button className="btn" style={{ width: '100%', background: 'var(--accent)', color: '#000', borderRadius: 'var(--radius-pill)', fontWeight: 700, border: 'none' }} onClick={() => setLoginOpen(true)}>🔐 ฝ่ายผลิตล็อคอิน</button>
+            <button className="btn" style={{ width: '100%', background: 'var(--accent)', color: '#000', borderRadius: 'var(--radius-pill)', fontWeight: 700, border: 'none' }} onClick={() => setLoginOpen(true)}>
+              <Lock size={16} /> ฝ่ายผลิตล็อคอิน
+            </button>
           )}
         </div>
       </aside>
@@ -183,11 +190,11 @@ export default function App() {
             </div>
             <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
               <div style={{ position: 'relative' }}>
-                <span style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: 'var(--ink-faint)', pointerEvents: 'none' }}>🔍</span>
+                <span style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', color: 'var(--ink-faint)', pointerEvents: 'none', display: 'flex' }}><Search size={16}/></span>
                 <input className="input" style={{ paddingLeft: 38, width: 240, borderRadius: 'var(--radius-pill)', border: 'none', boxShadow: 'var(--shadow-sm)' }} placeholder="Search..." value={search} onChange={e => setSearch(e.target.value)}/>
               </div>
-              {isProduction && <button className="btn" style={{ background: '#fff', color: '#000', fontWeight: 600, border: 'none', borderRadius: '50%', width: 44, height: 44, boxShadow: 'var(--shadow-sm)' }}>🔔</button>}
-              <button className="btn" style={{ background: 'var(--ink)', color: '#fff', fontWeight: 600, border: 'none', borderRadius: 'var(--radius-pill)', padding: '10px 24px', boxShadow: 'var(--shadow-md)' }} onClick={() => setSelected('new')}>+ เพิ่มงานใหม่</button>
+              {isProduction && <button className="btn" style={{ background: '#fff', color: '#000', fontWeight: 600, border: 'none', borderRadius: '50%', width: 44, height: 44, padding: 0, boxShadow: 'var(--shadow-sm)' }}><Bell size={20} /></button>}
+              <button className="btn" style={{ background: 'var(--ink)', color: '#fff', fontWeight: 600, border: 'none', borderRadius: 'var(--radius-pill)', padding: '10px 24px', boxShadow: 'var(--shadow-md)' }} onClick={() => setSelected('new')}><Plus size={18} /> เพิ่มงานใหม่</button>
             </div>
           </div>
 
@@ -201,9 +208,10 @@ export default function App() {
               <span style={{ 
                 background: 'rgba(239, 68, 68, 0.15)', color: '#fca5a5', 
                 fontSize: 13, fontWeight: 700, padding: '6px 14px', 
-                borderRadius: 'var(--radius-pill)', border: '1px solid rgba(239, 68, 68, 0.3)' 
+                borderRadius: 'var(--radius-pill)', border: '1px solid rgba(239, 68, 68, 0.3)',
+                display: 'inline-flex', alignItems: 'center', gap: 6
               }}>
-                ⏳ มี {waitCount} งานที่รอคอนเฟิร์ม!
+                <Bell size={14} /> มี {waitCount} งานที่รอคอนเฟิร์ม!
               </span>
             )}
           </div>
@@ -279,9 +287,9 @@ export default function App() {
             <select className="input" style={{ width: 180, background: 'var(--surface-card)', borderRadius: 'var(--radius-pill)', border: 'none', boxShadow: 'var(--shadow-sm)' }} value={filterStatus} onChange={e => setFStatus(e.target.value)}>
               <option value="">ทุกสถานะ</option>
               <option value="attention">⚠️ งานที่ต้องรับทราบ</option>
-              {STATUSES.map(s => <option key={s.key} value={s.key}>{s.icon} {s.label}</option>)}
+              {STATUSES.map(s => <option key={s.key} value={s.key}>{s.label}</option>)}
             </select>
-            <button className="btn btn-ghost" style={{ padding: '0 16px', background: 'var(--surface-card)', borderRadius: 'var(--radius-pill)', border: 'none', boxShadow: 'var(--shadow-sm)' }} onClick={fetchAll} title="รีเฟรช">🔄</button>
+            <button className="btn btn-ghost" style={{ padding: '0 16px', background: 'var(--surface-card)', borderRadius: 'var(--radius-pill)', border: 'none', boxShadow: 'var(--shadow-sm)' }} onClick={fetchAll} title="รีเฟรช"><RefreshCw size={16} /></button>
           </div>
 
           {/* Job list */}
@@ -289,7 +297,9 @@ export default function App() {
             <div style={{ textAlign: 'center', padding: 80, color: 'var(--ink-faint)' }}>กำลังโหลด...</div>
           ) : displayed.length === 0 ? (
             <div style={{ textAlign: 'center', padding: 80, color: 'var(--ink-faint)', background: 'var(--surface-card)', borderRadius: 'var(--radius-lg)', border: '1px dashed var(--rule)' }}>
-              <div style={{ fontSize: 42, marginBottom: 16 }}>🖨️</div>
+              <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'center', color: 'var(--rule)' }}>
+                <Printer size={48} />
+              </div>
               <p style={{ fontSize: 16, fontWeight: 500 }}>{jobs.length ? 'ไม่พบงานที่ตรงกัน' : 'ยังไม่มีงานในระบบ'}</p>
             </div>
           ) : (
@@ -302,7 +312,9 @@ export default function App() {
               
               {Math.ceil(displayed.length / jobsPerPage) > 1 && (
                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 8, marginTop: 32, paddingBottom: 16 }}>
-                  <button className="btn btn-ghost" disabled={currentPage === 1} onClick={() => { setCurrentPage(p => p - 1); window.scrollTo(0,0); }}>← ก่อนหน้า</button>
+                  <button className="btn btn-ghost" disabled={currentPage === 1} onClick={() => { setCurrentPage(p => p - 1); window.scrollTo(0,0); }}>
+                    <ChevronLeft size={16} /> ก่อนหน้า
+                  </button>
                   <div style={{ display: 'flex', gap: 6, overflowX: 'auto', paddingBottom: 4, maxWidth: '50vw' }}>
                     {Array.from({length: Math.ceil(displayed.length / jobsPerPage)}, (_, i) => i + 1).map(p => (
                       <button 
@@ -320,7 +332,9 @@ export default function App() {
                       </button>
                     ))}
                   </div>
-                  <button className="btn btn-ghost" disabled={currentPage === Math.ceil(displayed.length / jobsPerPage)} onClick={() => { setCurrentPage(p => p + 1); window.scrollTo(0,0); }}>ถัดไป →</button>
+                  <button className="btn btn-ghost" disabled={currentPage === Math.ceil(displayed.length / jobsPerPage)} onClick={() => { setCurrentPage(p => p + 1); window.scrollTo(0,0); }}>
+                    ถัดไป <ChevronRight size={16} />
+                  </button>
                 </div>
               )}
             </>
@@ -333,23 +347,23 @@ export default function App() {
       {/* Mobile Bottom Nav */}
       <div className="mobile-bottom-nav">
         <div className={`mobile-nav-item ${currentView === 'jobs' ? 'active' : ''}`} onClick={() => setCurrentView('jobs')}>
-          <span className="icon">🖨️</span>
+          <span className="icon"><Printer size={20} /></span>
           <span>งานพิมพ์</span>
         </div>
         {isProduction && (
           <div className={`mobile-nav-item ${currentView === 'stats' ? 'active' : ''}`} onClick={() => setCurrentView('stats')}>
-            <span className="icon">📊</span>
+            <span className="icon"><BarChart2 size={20} /></span>
             <span>สถิติ</span>
           </div>
         )}
         {isProduction ? (
           <div className="mobile-nav-item" onClick={handleLogout}>
-            <span className="icon">🚪</span>
+            <span className="icon"><LogOut size={20} /></span>
             <span>ออก</span>
           </div>
         ) : (
           <div className="mobile-nav-item" onClick={() => setLoginOpen(true)}>
-            <span className="icon">🔐</span>
+            <span className="icon"><Lock size={20} /></span>
             <span>ล็อกอิน</span>
           </div>
         )}
@@ -363,8 +377,8 @@ export default function App() {
           isProduction={isProduction}
           companies={[...new Set(jobs.map(j => j.company_name).filter(Boolean))].sort()}
           onClose={() => setSelected(null)}
-          onSaved={() => { fetchAll(); showToast('✅ บันทึกแล้ว'); }}
-          onDeleted={() => { fetchAll(); showToast('🗑️ ลบแล้ว'); }}
+          onSaved={() => { fetchAll(); showToast('บันทึกแล้ว'); }}
+          onDeleted={() => { fetchAll(); showToast('ลบแล้ว'); }}
         />
       )}
 
