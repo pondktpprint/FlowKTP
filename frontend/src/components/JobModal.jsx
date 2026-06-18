@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { STATUSES, COATINGS, COLORS_OPTIONS, PRINT_SYSTEMS, TECHNIQUES, PAPER_TYPES, STATUS_MAP, apiFetch } from '../constants.jsx';
 import StatusBar from './StatusBar.jsx';
 
-export default function JobModal({ job, sales, companies = [], isProduction, onClose, onSaved, onDeleted }) {
+export default function JobModal({ job, sales, companies = [], papers = [], isProduction, onClose, onSaved, onDeleted }) {
   const isNew = !job?.id;
   const [form, setForm] = useState({
     job_no: '', name: '', company_name: '', sales_id: '', due_date: '',
@@ -125,7 +125,7 @@ export default function JobModal({ job, sales, companies = [], isProduction, onC
               <label>ประเภทกระดาษ</label>
               <input className="input" list="paperList" value={form.paper} onChange={e => set('paper', e.target.value)} disabled={readOnly} placeholder="พิมพ์หรือเลือก..."/>
               <datalist id="paperList">
-                {PAPER_TYPES.map(p => <option key={p} value={p} />)}
+                {[...new Set([...PAPER_TYPES, ...papers])].map(p => <option key={p} value={p} />)}
               </datalist>
             </div>
 
