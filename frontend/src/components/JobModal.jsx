@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { STATUSES, COATINGS, COLORS_OPTIONS, PRINT_SYSTEMS, TECHNIQUES, STATUS_MAP, apiFetch } from '../constants.jsx';
+import { STATUSES, COATINGS, COLORS_OPTIONS, PRINT_SYSTEMS, TECHNIQUES, PAPER_TYPES, STATUS_MAP, apiFetch } from '../constants.jsx';
 import StatusBar from './StatusBar.jsx';
 
 export default function JobModal({ job, sales, companies = [], isProduction, onClose, onSaved, onDeleted }) {
@@ -123,7 +123,10 @@ export default function JobModal({ job, sales, companies = [], isProduction, onC
 
             <div className="field">
               <label>ประเภทกระดาษ</label>
-              <input className="input" value={form.paper} onChange={e => set('paper', e.target.value)} disabled={readOnly} placeholder="เช่น อาร์ตมัน 150g"/>
+              <input className="input" list="paperList" value={form.paper} onChange={e => set('paper', e.target.value)} disabled={readOnly} placeholder="พิมพ์หรือเลือก..."/>
+              <datalist id="paperList">
+                {PAPER_TYPES.map(p => <option key={p} value={p} />)}
+              </datalist>
             </div>
 
             <div className="field">
