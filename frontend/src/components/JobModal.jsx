@@ -64,7 +64,7 @@ export default function JobModal({ job, sales, companies = [], isProduction, onC
     onDeleted(); onClose();
   }
 
-  const readOnly = !isProduction;
+  const readOnly = !isProduction && !isNew;
 
   return (
     <div className="overlay open" onClick={e => e.target === e.currentTarget && onClose()}>
@@ -244,7 +244,7 @@ export default function JobModal({ job, sales, companies = [], isProduction, onC
           })()}
         </div>
 
-        {isProduction && (
+        {(isProduction || isNew) && (
           <div className="modal-foot">
             {!isNew && !confirmDel && (
               <button className="btn btn-danger btn-sm" onClick={() => setConfirmDel(true)}>ลบงาน</button>

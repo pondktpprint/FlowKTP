@@ -56,8 +56,8 @@ app.get('/api/jobs/:id', async (req, res) => {
   res.json({ ...rows[0], history });
 });
 
-// ── Jobs (production only) ────────────────────────
-app.post('/api/jobs', authMiddleware, async (req, res) => {
+// ── Jobs (production only for PUT/DELETE) ────────────────────────
+app.post('/api/jobs', async (req, res) => {
   try {
     const { job_no, name, company_name, sales_id, due_date, print_system, print_color, paper, colors, coating, special_techniques, foil_color, fold_type, status, note, urgency_color } = req.body;
     if (!job_no || !name || !sales_id) return res.status(400).json({ error: 'job_no, name, sales_id required' });
