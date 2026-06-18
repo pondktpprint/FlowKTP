@@ -4,6 +4,7 @@ import { Printer, BarChart2, Bell, Search, Plus, LogOut, Lock, RefreshCw, Sparkl
 import JobCard from './components/JobCard.jsx';
 import JobModal from './components/JobModal.jsx';
 import Dashboard from './components/Dashboard.jsx';
+import ParticlesBackground from './components/ParticlesBackground.jsx';
 import './index.css';
 
 export default function App() {
@@ -118,7 +119,7 @@ export default function App() {
       {/* Splash Screen */}
       {showSplash && (
         <div className="splash-screen">
-          <div className="bg-marble" style={{ opacity: 0.4 }}></div>
+          <ParticlesBackground />
           <div className="splash-text">
             <h1>Printflow</h1>
             <p>Production on Demand</p>
@@ -127,8 +128,8 @@ export default function App() {
       )}
 
       <div className="layout-container">
-        {/* Background Marble */}
-        <div className="bg-marble"></div>
+        {/* Particles Background */}
+        <ParticlesBackground />
 
         {/* Sidebar Desktop */}
       <aside className="sidebar-desktop">

@@ -194,23 +194,6 @@ textarea.input { resize: vertical; min-height: 80px; }
   animation: pulse-red 2s infinite cubic-bezier(0.66, 0, 0, 1);
 }
 
-/* ── Immersive Marble Background ── */
-.bg-marble {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background: url('/flowing_marble.png') repeat;
-  background-size: 1200px;
-  opacity: 0.8;
-  mix-blend-mode: multiply;
-  animation: marbleFlow 90s linear infinite;
-}
-
-@keyframes marbleFlow {
-  0% { background-position: 0px 0px; }
-  100% { background-position: -1200px 1200px; }
-}
 
 /* ── Splash Screen ── */
 @keyframes splashFade {
